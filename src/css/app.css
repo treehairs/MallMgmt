@@ -1,0 +1,39 @@
+/* app global css */
+@font-face {
+  font-family: title;
+  src: url(./fonts/AlimamaFangYuanTiVF-Thin-2.ttf);
+}
+@font-face {
+  font-family: title2;
+  src: url(./fonts/仓耳与墨W03.ttf);
+}
+@font-face {
+  font-family: yuanti;
+  src: url(./fonts/ResourceHanRoundedCN-Normal.ttf);
+}
+
+:root {
+  --text-green: #50cd89;
+  --bg-green: #e8fff3;
+
+  --text-blue: #1659e6;
+  --bg-blue: #212e48;
+
+  --text-red: #f1416c;
+  --bg-red: #fff5f8;
+
+  --text-grey: #a5a5a5;
+  --bg-grey: #f9f9f9;
+
+  --deep--text-green: #08a261;
+  --deep--bg-green: #1f212a;
+
+  --deep--text-blue: #0060ac;
+  --deep--bg-blue: #172331;
+
+  --deep--text-red: #e42639;
+  --deep--bg-red: #302024;
+
+  --deep--text-grey: #a5a5a5;
+  --deep--bg-grey: #f9f9f9;
+}
