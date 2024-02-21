@@ -36,4 +36,16 @@
 
   --deep--text-grey: #a5a5a5;
   --deep--bg-grey: #f9f9f9;
+
+  --primary: #6f77fc;
+  --secondary: "#E6E9F4";
+  --accent: "#9C27B0";
+
+  --dark: "#1d1d1d";
+
+  --positive: "#21BA45";
+  --negative: "#e42639";
+  --info: "#409eff";
+  --warning: "#F2C037";
+  --neutral: "#909399";
 }

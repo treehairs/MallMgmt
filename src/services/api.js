@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = 'http://localhost:3000'
+const url = 'http://[2409:8a55:48da:5440:59a3:4743:b1b:165c]:3000'
 
 /**
  * 查询商品

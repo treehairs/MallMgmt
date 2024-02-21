@@ -11,11 +11,11 @@
           </li>
           <li>
             <span>类别：</span>
-            <SelectInput :data="rows.value" filterConditions="category_name" @selectedChanged="selectedChanged" />
+            <SelectInput :data="rows" filterConditions="category_name" @selectedChanged="selectedChanged" />
           </li>
           <li>
             <span>状态：</span>
-            <SelectInput :data="rows.value" filterConditions="product_status" @selectedChanged="selectedChanged" />
+            <SelectInput :data="rows" filterConditions="product_status" @selectedChanged="selectedChanged" />
           </li>
           <li>
             <span>创建日期：</span>
@@ -28,17 +28,15 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch, defineEmits, computed } from 'vue'
+import { ref, defineProps, watch, defineEmits } from 'vue'
 import SelectInput from 'src/components/Common/Form/SelectInput.vue'
 import DatePicker from 'src/components/Common/Form/DatePicker.vue'
-import Checkbox from 'src/components/Common/Checkbox.vue'
 
 const props = defineProps(['dialog', 'column', 'rows'])
 const emit = defineEmits(['hideDialog', 'selectedColumnsChanged'])
 const dialog = ref(props.dialog)
 const column = ref(props.column)
 const rows = ref(props.rows)
-const multiple = ref(null)
 
 watch(() => {
   dialog.value = props.dialog
