@@ -47,11 +47,12 @@ export default [
       {
         link: 'local_mall',
         label: '商品列表',
-        to: '/productList'
+        to: '/product'
       },
       {
         link: 'category',
-        label: '类别列表'
+        label: '类别列表',
+        to: '/category'
       },
       {
         link: 'add_shopping_cart',
