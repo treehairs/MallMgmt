@@ -1,19 +1,23 @@
 # MallMgmt (mallmgmt)
 
-A Quasar Project
+电子商城后台项目
 
-## Install the dependencies
+## 安装依赖项
 
 ```bash
 yarn
 # or
 npm install
+# or
+yarn install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+### 运行项目
 
 ```bash
 quasar dev
+# or
+yarn dev
 ```
 
 ### Lint the files
