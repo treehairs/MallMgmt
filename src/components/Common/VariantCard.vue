@@ -4,17 +4,23 @@
       <div class="btn discount-btn" @click.prevent="">
         <q-icon name="loyalty" />
       </div>
-      <div class="btn update-btn" @click.prevent="updateVariant(variant.id)">
+      <div
+        class="btn update-btn"
+        @click.prevent="updateVariant(variant.variant_id)"
+      >
         <q-icon name="edit" />
       </div>
-      <div class="btn delete-btn" @click.prevent="deleteVariant(variant.id)">
+      <div
+        class="btn delete-btn"
+        @click.prevent="deleteVariant(variant.variant_id)"
+      >
         <q-icon name="close" />
       </div>
     </li>
     <li class="product-image">
       <img :src="variant.image" alt="" />
     </li>
-    <li class="product-name">{{ variant.name }}</li>
+    <li class="product-name">{{ variant.variant_name }}</li>
     <li class="product-price">{{ variant.price }}</li>
     <li class="product-inventory">
       <span class="in-stock" v-if="variant.inventory">{{
@@ -22,7 +28,7 @@
       }}</span>
       <span class="sold-out" v-else>售罄</span>
     </li>
-    <li class="product-style">{{ variant.style }}+{{ variant.options }}</li>
+    <li class="product-style">{{ variant.style }}+{{ variant.specs }}</li>
   </ul>
 </template>
 
@@ -106,7 +112,6 @@ const updateVariant = (variant_id) => {
 }
 
 .checked {
-
   &::before,
   &::after {
     width: 100%;
@@ -148,7 +153,6 @@ const updateVariant = (variant_id) => {
   }
 
   @mixin set-btn-color($color) {
-
     // background: $bg;
     &:hover {
       background: darken($color, $amount: 10%);
@@ -158,17 +162,17 @@ const updateVariant = (variant_id) => {
 
   .discount-btn {
     $bg: #dba8e4;
-    @include set-btn-color($bg)
+    @include set-btn-color($bg);
   }
 
   .delete-btn {
     $bg: #ff7474;
-    @include set-btn-color($bg)
+    @include set-btn-color($bg);
   }
 
   .update-btn {
     $bg: #bcbffc;
-    @include set-btn-color($bg)
+    @include set-btn-color($bg);
   }
 }
 

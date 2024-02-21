@@ -10,46 +10,95 @@
         </li>
         <li class="variant-info-item name-box">
           <label for="name">变体名称</label>
-          <input type="text" name="name" placeholder="变体名称" v-model="variantInfo.name"
-            :class="submitForm && !variantInfo.name ? 'empty' : ''" />
+          <input
+            type="text"
+            name="name"
+            placeholder="变体名称"
+            v-model="variantInfo.variant_name"
+            :class="submitForm && !variantInfo.variant_name ? 'empty' : ''"
+          />
           <div class="tips-box">
-            <label :for="variantInfo.name" v-if="submitForm && !variantInfo.name" class="tips">值不能为空</label>
+            <label
+              :for="variantInfo.variant_name"
+              v-if="submitForm && !variantInfo.variant_name"
+              class="tips"
+              >值不能为空</label
+            >
           </div>
         </li>
         <li class="variant-info-item">
           <div>
             <label for="name">变体价格</label>
-            <input type="text" name="name" placeholder="变体价格" v-model="variantInfo.price"
-              :class="submitForm && !variantInfo.price ? 'empty' : ''" />
+            <input
+              type="text"
+              name="name"
+              placeholder="变体价格"
+              v-model="variantInfo.price"
+              :class="submitForm && !variantInfo.price ? 'empty' : ''"
+            />
             <div class="tips-box">
-              <label :for="variantInfo.price" v-if="submitForm && !variantInfo.price" class="tips">值不能为空</label>
+              <label
+                :for="variantInfo.price"
+                v-if="submitForm && !variantInfo.price"
+                class="tips"
+                >值不能为空</label
+              >
             </div>
           </div>
           <div>
             <label for="name">变体库存</label>
-            <input type="text" name="name" placeholder="变体库存" v-model="variantInfo.inventory"
-              :class="submitForm && !variantInfo.inventory ? 'empty' : ''" />
+            <input
+              type="text"
+              name="name"
+              placeholder="变体库存"
+              v-model="variantInfo.inventory"
+              :class="submitForm && !variantInfo.inventory ? 'empty' : ''"
+            />
             <div class="tips-box">
-              <label :for="variantInfo.inventory" v-if="submitForm && !variantInfo.inventory && !0"
-                class="tips">值不能为空</label>
+              <label
+                :for="variantInfo.inventory"
+                v-if="submitForm && !variantInfo.inventory && !0"
+                class="tips"
+                >值不能为空</label
+              >
             </div>
           </div>
         </li>
         <li class="variant-info-item">
           <div>
             <label for="name">变体类型</label>
-            <input type="text" name="name" placeholder="变体类型" v-model="variantInfo.style"
-              :class="submitForm && !variantInfo.style ? 'empty' : ''" />
+            <input
+              type="text"
+              name="name"
+              placeholder="变体类型"
+              v-model="variantInfo.style"
+              :class="submitForm && !variantInfo.style ? 'empty' : ''"
+            />
             <div class="tips-box">
-              <label :for="variantInfo.style" v-if="submitForm && !variantInfo.style" class="tips">值不能为空</label>
+              <label
+                :for="variantInfo.style"
+                v-if="submitForm && !variantInfo.style"
+                class="tips"
+                >值不能为空</label
+              >
             </div>
           </div>
           <div>
             <label for="name">变体规格</label>
-            <input type="text" name="name" placeholder="变体规格" v-model="variantInfo.options"
-              :class="submitForm && !variantInfo.options ? 'empty' : ''" />
+            <input
+              type="text"
+              name="name"
+              placeholder="变体规格"
+              v-model="variantInfo.specs"
+              :class="submitForm && !variantInfo.specs ? 'empty' : ''"
+            />
             <div class="tips-box">
-              <label :for="variantInfo.options" v-if="submitForm && !variantInfo.options" class="tips">值不能为空</label>
+              <label
+                :for="variantInfo.specs"
+                v-if="submitForm && !variantInfo.specs"
+                class="tips"
+                >值不能为空</label
+              >
             </div>
           </div>
         </li>
