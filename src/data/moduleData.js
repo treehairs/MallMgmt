@@ -56,7 +56,8 @@ export default [
       },
       {
         link: 'add_shopping_cart',
-        label: '添加商品'
+        label: '添加商品',
+        to: '/product/add'
       },
       {
         link: 'assignment_add',

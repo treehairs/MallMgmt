@@ -14,16 +14,10 @@
               </div>
               <div class="select-list">
                 <ul>
-                  <li
-                    @click="updateStatus('在售')"
-                    :class="{ 'text-green': status === '在售' }"
-                  >
+                  <li @click="updateStatus('在售')" :class="{ 'text-green': status === '在售' }">
                     在售<q-icon name="done" v-if="status === '在售'" />
                   </li>
-                  <li
-                    @click="updateStatus('下架')"
-                    :class="{ 'text-red': status === '下架' }"
-                  >
+                  <li @click="updateStatus('下架')" :class="{ 'text-red': status === '下架' }">
                     下架<q-icon name="done" v-if="status === '下架'" />
                   </li>
                 </ul>
@@ -35,76 +29,33 @@
             <form action="/abc" ref="productForm" @submit.prevent="submitForm">
               <!-- 商品信息编辑 -->
               <ul class="product-info-list">
-                <li class="product-info-item">
-                  <label for="pid" class="product-info-label">商品编号</label>
-                  <input
-                    type="text"
-                    name="pid"
-                    v-model="param"
-                    disabled
-                    class="product-info-input"
-                    placeholder="商品编号"
-                  />
-                  <div class="tips-box"></div>
-                </li>
-                <li
-                  class="product-info-item"
-                  v-for="item in form"
-                  :key="item.index"
-                >
+                <li class="product-info-item" v-for="item in form" :key="item.index">
                   <label :for="item.key" class="product-info-label">{{
                     item.title
                   }}</label>
-                  <input
-                    type="text"
-                    :name="item.key"
-                    v-model="formData[item.key]"
-                    :required="item.required"
-                    :readonly="item.readonly"
-                    class="product-info-input"
-                    :class="valueChecked && !formData[item.key] ? 'empty' : ''"
-                    :placeholder="item.title"
-                  />
+                  <input type="text" :name="item.key" v-model="formData[item.key]" :required="item.required"
+                    :readonly="item.readonly" :disabled="item.disabled" class="product-info-input"
+                    :class="valueChecked && !formData[item.key] ? 'empty' : ''" :placeholder="item.title" />
                   <div class="tips-box">
-                    <label
-                      :for="item.key"
-                      v-if="valueChecked && !formData[item.key]"
-                      class="tips"
-                      >值不能为空</label
-                    >
+                    <label :for="item.key" v-if="valueChecked && !formData[item.key]" class="tips">值不能为空</label>
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="description" class="product-info-label"
-                    >商品描述</label
-                  >
-                  <q-editor v-model="editor" min-height="10rem" />
+                  <label for="description" class="product-info-label">商品描述</label>
+                  <q-editor v-model="formData.description" placeholder="请输入商品描述" min-height="10rem"
+                    :class="valueChecked && !formData.description ? 'empty' : ''" />
+                  <div class="tips-box">
+                    <label for="description" v-if="valueChecked && !formData.description" class="tips">值不能为空</label>
+                  </div>
+                </li>
+                <li class="product-info-item">
+                  <label for="created-at" class="product-info-label">创建时间</label>
+                  <input type="text" name="created-at" disabled class="product-info-input" placeholder="商品编号" />
                   <div class="tips-box"></div>
                 </li>
                 <li class="product-info-item">
-                  <label for="created-at" class="product-info-label"
-                    >创建时间</label
-                  >
-                  <input
-                    type="text"
-                    name="created-at"
-                    disabled
-                    class="product-info-input"
-                    placeholder="商品编号"
-                  />
-                  <div class="tips-box"></div>
-                </li>
-                <li class="product-info-item">
-                  <label for="updated-at" class="product-info-label"
-                    >最后更新</label
-                  >
-                  <input
-                    type="text"
-                    name="updated-at"
-                    disabled
-                    class="product-info-input"
-                    placeholder="商品编号"
-                  />
+                  <label for="updated-at" class="product-info-label">最后更新</label>
+                  <input type="text" name="updated-at" disabled class="product-info-input" placeholder="商品编号" />
                   <div class="tips-box"></div>
                 </li>
               </ul>
@@ -114,57 +65,29 @@
         <div class="variants-box">
           <div class="header">
             <span class="header-title">商品变体列表</span>
-            <q-btn
-              size="15px"
-              :class="allSelectedStatus ? 'text-white' : 'text-black'"
-              unelevated
-              @click="allSelected"
-              :color="allSelectedStatus ? 'primary' : 'grey-1'"
-              >全选</q-btn
-            >
-            <q-btn
-              color="accent"
-              icon="loyalty"
-              size="13px"
-              class="btn set-discount-btn"
-              :disable="!checkedVariant"
-            >
+            <q-btn size="15px" :class="allSelectedStatus ? 'text-white' : 'text-black'" unelevated @click="allSelected"
+              :color="allSelectedStatus ? 'primary' : 'grey-1'">全选</q-btn>
+            <q-btn color="accent" icon="loyalty" size="13px" class="btn set-discount-btn" :disable="!checkedVariant">
               <!-- <span>折扣</span> -->
               <q-tooltip>批量设置折扣</q-tooltip>
             </q-btn>
-            <q-btn
-              color="negative"
-              icon="delete_sweep"
-              size="15px"
-              class="btn delete-btn"
-              :disable="!checkedVariant"
+            <q-btn color="negative" icon="delete_sweep" size="15px" class="btn delete-btn" :disable="!checkedVariant"
               @click="
                 deleteEventConfirm = true;
-                deleteVariantID = 0;
-              "
-            >
+              deleteVariantID = 0;
+              ">
               <!-- <span>删除</span> -->
               <q-tooltip>批量删除</q-tooltip>
             </q-btn>
-            <q-btn
-              color="primary"
-              icon="add"
-              size="15px"
-              class="btn add-variant-btn"
-              @click="updateVariant(0)"
-            >
+            <q-btn color="primary" icon="add" size="15px" class="btn add-variant-btn" @click="updateVariant(0)">
               <q-tooltip>添加商品变体</q-tooltip>
             </q-btn>
           </div>
           <div class="variants">
             <transition-group name="slide">
               <template v-for="variant in variants" :key="variant">
-                <VariantCard
-                  :variant="variant"
-                  @deleteVariant="deleteVariant"
-                  @updateVariant="updateVariant"
-                  @click="handleClickVariant(variant)"
-                />
+                <VariantCard :variant="variant" @deleteVariant="deleteVariant" @updateVariant="updateVariant"
+                  @click="handleClickVariant(variant)" />
               </template>
             </transition-group>
           </div>
@@ -172,17 +95,11 @@
       </template>
     </Stepper>
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox
-        @cancel="deleteEventConfirm = false"
-        @deleteEvent="deleteEvent"
-      ></PromptBox>
+      <PromptBox @cancel="deleteEventConfirm = false" @deleteEvent="deleteEvent"></PromptBox>
     </q-dialog>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant
-        @addVariant="addVariant"
-        @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="updateVariantInfo"
-      />
+      <UpdateVariant @addVariant="addVariant" @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="updateVariantInfo" />
     </q-dialog>
   </div>
 </template>
@@ -199,6 +116,17 @@ import { ref, computed, reactive, watch, onMounted } from "vue";
 import { showNotif } from "src/utils/utils.js";
 import { useRoute } from "vue-router";
 
+const variants = ref([]);
+const allSelectedStatus = ref(false);
+const defaultStatus = ref("在售");
+const status = ref(defaultStatus.value);
+const valueChecked = ref(false);
+const deleteEventConfirm = ref(false);
+const UpdateVariantCard = ref(false);
+const updateVariantInfo = ref({});
+const checkedVariant = ref(false);
+const deleteVariantID = ref(0);
+const route = useRoute();
 const steps = [
   {
     title: "商品编辑",
@@ -213,33 +141,28 @@ const steps = [
 
 const form = [
   {
+    title: "商品编号",
+    key: "product_id",
+    required: true,
+    disabled: route.params.id
+  },
+  {
     title: "商品名称",
-    key: "productName",
+    key: "product_name",
     required: true,
   },
   {
     title: "商品分类",
     key: "category",
     required: true,
-  },
+  }
 ];
 
-const variants = ref([]);
-const allSelectedStatus = ref(false);
-const defaultStatus = ref("在售");
-const status = ref(defaultStatus.value);
-const valueChecked = ref(false);
-const deleteEventConfirm = ref(false);
-const UpdateVariantCard = ref(false);
-const updateVariantInfo = ref({});
-const checkedVariant = ref(false);
-const param = ref();
-const editor = ref("请输入商品描述");
-const deleteVariantID = ref(0);
-const route = useRoute();
-const formData = reactive({
-  productName: "",
+const formData = ref({
+  product_id: route.params.id || "",
+  product_name: "",
   category: "",
+  description: ""
 });
 
 // 监视数组对象里面的checked属性
@@ -274,7 +197,7 @@ const fetchDataAndSetRows = async () => {
   try {
     const data = await fetchData("/variants");
     variants.value = data.data.filter(
-      (item) => item.product_id === +param.value
+      (item) => item.product_id === +route.params.id
     );
   } catch (error) {
     console.error("请求失败:", error.code);
@@ -292,13 +215,12 @@ const fetchDataAndSetRows = async () => {
 const deleteVariant = (variant_id) => {
   deleteEventConfirm.value = true;
   deleteVariantID.value = variant_id;
-  console.log(variant_id);
 };
 
 const updateVariant = (variant_id) => {
   UpdateVariantCard.value = true;
   updateVariantInfo.value = variants.value.find(
-    (item) => item.id === variant_id
+    (item) => item.variant_id === variant_id
   );
 };
 
@@ -333,7 +255,7 @@ const addVariant = (variant) => {
 };
 
 const isEmpty = () => {
-  if (isAnyObjectValueEmpty(formData)) {
+  if (isAnyObjectValueEmpty(formData.value)) {
     showNotif("black", "信息未填写", "warning");
     valueChecked.value = true;
     return false;
@@ -349,10 +271,7 @@ const statusColor = computed(() => {
   return status.value === "在售" ? "green" : "red";
 });
 
-onMounted(() => {
-  fetchDataAndSetRows();
-  param.value = route.params.id;
-});
+onMounted(fetchDataAndSetRows);
 </script>
 
 <style lang="scss" scoped>
@@ -472,21 +391,17 @@ onMounted(() => {
     }
 
     .status-dot.green {
-      background: radial-gradient(
-        circle,
-        #17c653 20%,
-        lighten(#17c653, 45%) 60%,
-        transparent 90%
-      );
+      background: radial-gradient(circle,
+          #17c653 20%,
+          lighten(#17c653, 45%) 60%,
+          transparent 90%);
     }
 
     .status-dot.red {
-      background: radial-gradient(
-        circle,
-        #f8285a 20%,
-        lighten(#f8285a, 45%) 60%,
-        transparent 90%
-      );
+      background: radial-gradient(circle,
+          #f8285a 20%,
+          lighten(#f8285a, 45%) 60%,
+          transparent 90%);
     }
   }
 
@@ -617,7 +532,9 @@ onMounted(() => {
 
 .variants {
   width: 100%;
-  padding: 40px 20px;
+  max-height: 830px;
+  overflow-y: scroll;
+  padding: 20px 20px;
   display: grid;
   grid-template-columns: repeat(auto-fill, 300px);
   grid-gap: 5px;
@@ -626,6 +543,7 @@ onMounted(() => {
   grid-gap: 50px 0;
   transition: 0.2s;
   grid-auto-flow: dense;
+  margin: 20px 0;
 }
 
 @keyframes empty {

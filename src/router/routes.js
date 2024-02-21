@@ -35,13 +35,18 @@ const routes = [
             component: () => import('pages/Product/EditProduct.vue'),
             meta: { title: '商品编辑', icon: 'edit_square', module: '商品管理', module_icon: 'shopping_cart' },
           },
+          {
+            path: 'add',
+            component: () => import('pages/Product/AddProduct.vue'),
+            meta: { title: '商品添加', icon: 'add_shopping_cart', module: '商品管理', module_icon: 'shopping_cart' },
+          },
         ]
       },
       {
         path: 'category',
         component: () => import('pages/Category/CategoryList.vue'),
         meta: { title: '类别列表', icon: 'category', module: '商品管理', module_icon: 'shopping_cart' },
-      },
+      }
 
     ]
   },
