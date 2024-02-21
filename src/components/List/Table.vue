@@ -7,9 +7,16 @@
           <th class="checkbox">
             <Checkbox v-model="selectAll" @change="toggleAll"></Checkbox>
           </th>
-          <th v-for="item in columnName" :key="item.index" @click="!item.unsorted ? sort_data(`${item.class}`) : null"
-            :class="item.class">
-            <TableHeader :isAscending="isAscending" :unsorted="item.unsorted || false">
+          <th
+            v-for="item in columnName"
+            :key="item.index"
+            @click="!item.unsorted ? sort_data(`${item.class}`) : null"
+            :class="item.class"
+          >
+            <TableHeader
+              :isAscending="isAscending"
+              :unsorted="item.unsorted || false"
+            >
               <span>{{ item.name }}</span>
             </TableHeader>
           </th>
@@ -19,7 +26,11 @@
       <tbody>
         <tr v-for="item in paginatedData" :key="item[primaryKeyClass]">
           <td class="checkbox">
-            <Checkbox v-model="item.selected" :id="item[primaryKeyClass]" @change="handleChange(item)" />
+            <Checkbox
+              v-model="item.selected"
+              :id="item[primaryKeyClass]"
+              @change="handleChange(item)"
+            />
           </td>
           <td v-for="rows in columnName" :key="rows.product_id">
             <slot :name="rows.class" :props="{ item }">
@@ -27,7 +38,13 @@
             </slot>
           </td>
           <td class="op-btns">
-            <q-btn-dropdown class="dropdown" unelevated label="操作" transition-show="jump-up" transition-hide="jump-down">
+            <q-btn-dropdown
+              class="dropdown"
+              unelevated
+              label="操作"
+              transition-show="jump-up"
+              transition-hide="jump-down"
+            >
               <q-list class="list">
                 <slot name="op" :props="{ item }"></slot>
               </q-list>
@@ -37,7 +54,13 @@
       </tbody>
     </table>
     <div class="q-pa-lg flex flex-center">
-      <q-pagination v-model="pagination.page" color="primary" :max="pagesNumber" :max-pages="6" boundary-numbers />
+      <q-pagination
+        v-model="pagination.page"
+        color="primary"
+        :max="pagesNumber"
+        :max-pages="6"
+        boundary-numbers
+      />
     </div>
     <div v-if="!data || !data.length">
       <EmptyBox></EmptyBox>
@@ -236,12 +259,6 @@ const sort_data = (columnName) => {
       }
     }
   }
-
-  .checkbox {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-  }
 }
 
 .list {
@@ -259,7 +276,6 @@ const sort_data = (columnName) => {
 
 .body--dark {
   table {
-
     th,
     td {
       border-bottom: 1px dashed #26272f;

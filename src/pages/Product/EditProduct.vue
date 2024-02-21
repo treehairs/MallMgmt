@@ -379,9 +379,9 @@ onMounted(() => {
 }
 
 /* 想要让动画平滑一点，需要加v-move的类名，v-可以别name的值 */
-.slide-move {
-  // transition: all 1s;
-}
+// .slide-move {
+// transition: all 1s;
+// }
 
 @keyframes slide-in {
   from {
@@ -596,8 +596,8 @@ onMounted(() => {
       height: 40px;
     }
 
-    .set-discount-btn {
-    }
+    // .set-discount-btn {
+    // }
 
     .delete-btn {
       span {
