@@ -10,17 +10,35 @@
         <q-icon name="tune" class="header-icon"></q-icon>
         筛选
       </q-btn>
-      <q-btn class="header-btn delete-btn" color="negative" unelevated :disable="deleteDisabled" @click="deleteItems">
+      <q-btn
+        class="header-btn delete-btn"
+        color="negative"
+        unelevated
+        :disable="deleteDisabled"
+        @click="deleteItems"
+      >
         <q-icon name="delete_sweep" class="header-icon"></q-icon>
         删除
       </q-btn>
     </div>
 
-    <Table :rows="rows" :columnName="columnName" :closePromptBox="closePromptBox" v-if="productsReady"
-      @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false">
+    <Table
+      :rows="rows"
+      :columnName="columnName"
+      :closePromptBox="closePromptBox"
+      v-if="productsReady"
+      @checkboxChangeInTable="checkboxChange"
+      @deleteEvent="deleteItem"
+      @closePromptBox="closePromptBox = false"
+    >
       <template v-slot:product="{ props }">
         <div class="product">
-          <q-img :src="props.item.promo_image" :ratio="1" width="50px" class="promo-image" />
+          <q-img
+            :src="props.item.promo_image"
+            :ratio="1"
+            width="50px"
+            class="promo-image"
+          />
           <span class="product_name">{{ props.item.product_name }}</span>
         </div>
       </template>
@@ -50,13 +68,17 @@
         </div>
       </template>
       <template v-slot:op="{ props }">
-        <q-item clickable v-close-popup @click="handleEdit(props.item.product_id)">
+        <q-item clickable v-close-popup @click="handleEdit(props.item)">
           <q-item-section class="section">
             <q-item-label>详情</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-close-popup @click="deleteItem(props.item.product_id)">
+        <q-item
+          clickable
+          v-close-popup
+          @click="deleteItem(props.item.product_id)"
+        >
           <q-item-section class="section">
             <q-item-label>删除</q-item-label>
           </q-item-section>
@@ -65,15 +87,27 @@
     </Table>
 
     <div v-else class="relative-position loading">
-      <q-inner-loading showing><q-spinner-facebook color="primary" size="30px" /></q-inner-loading>
+      <q-inner-loading showing
+        ><q-spinner-facebook color="primary" size="30px"
+      /></q-inner-loading>
     </div>
 
-    <Drawer :dialog="dialog" @dialogEventListener="dialog = false" :column="columnName" :rows="originalRows"
-      @selectedColumnsChanged="columnsChanged" @selectedRowsChanged="rowsChanged" @dateChange="dateChange"></Drawer>
+    <Drawer
+      :dialog="dialog"
+      @dialogEventListener="dialog = false"
+      :column="columnName"
+      :rows="originalRows"
+      @selectedColumnsChanged="columnsChanged"
+      @selectedRowsChanged="rowsChanged"
+      @dateChange="dateChange"
+    ></Drawer>
 
     <!-- 数据删除提示框 -->
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox @deleteEvent="deleteEvent" @cancel="deleteEventConfirm = false"></PromptBox>
+      <PromptBox
+        @deleteEvent="deleteEvent"
+        @cancel="deleteEventConfirm = false"
+      ></PromptBox>
     </q-dialog>
   </div>
   <router-view></router-view>
@@ -86,6 +120,7 @@ import Drawer from "src/components/Common/Drawer.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
 import { deleteData, fetchData } from "src/services/api";
 // import { showNotif } from 'src/utils/utils.js'
+import { Encrypt, Decrypt } from "src/utils/secret";
 import { onMounted, ref } from "vue";
 import { debounce, throttle, useQuasar } from "quasar";
 import { useRouter } from "vue-router";
@@ -218,8 +253,8 @@ const columnsChanged = (columns) => {
 const rowsChanged = (data, filterConditions) => {
   rows.value = data.length
     ? originalRows.value.filter((item) =>
-      data.some((ele) => item[filterConditions] === ele)
-    )
+        data.some((ele) => item[filterConditions] === ele)
+      )
     : originalRows.value;
 };
 
@@ -273,8 +308,7 @@ const dateChange = (date) => {
 const searchEvent = (keyword) => {
   if (keyword === "") {
     rows.value = originalRows.value;
-  }
-  else {
+  } else {
     rows.value = originalRows.value.filter((item) =>
       item.product_name.includes(keyword)
     );
@@ -306,12 +340,14 @@ const deleteEvent = () => {
   }
 };
 
-const handleEdit = (category_id) => {
-  router.push(`/product/edit/${category_id}`)
+const handleEdit = (item) => {
+  const ciphertext = Encrypt(item); //加密商品数据
+  console.log(Decrypt(ciphertext)); // 数据正确
+  router.push(`/product/edit/${item.product_id}?p=${ciphertext}`);
 };
 
 /**
- * 顶部通知
+ * 顶部通知F
  * @param {Type} type    - 图标
  * @param {string} message - 消息
  * @typedef {'positive' | 'negative' | 'warning' | 'info' | 'ongoing'} Type
@@ -332,7 +368,6 @@ onMounted(fetchDataAndSetRows);
 .loading {
   width: 100%;
   height: 300px;
-
 }
 
 .section {
@@ -438,7 +473,6 @@ onMounted(fetchDataAndSetRows);
 }
 
 .body--light {
-
   .filter-btn,
   .refresh-btn {
     color: #000;
@@ -447,7 +481,6 @@ onMounted(fetchDataAndSetRows);
 }
 
 .body--dark {
-
   .filter-btn,
   .refresh-btn {
     background: #272727;

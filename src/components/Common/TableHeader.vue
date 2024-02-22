@@ -1,15 +1,16 @@
 <template>
   <div class="header">
     <slot></slot>
-    <q-icon v-if="!unsorted" :name="isAscending ? 'keyboard_arrow_down' : 'keyboard_arrow_up'" class=" sort-icon" />
+    <q-icon
+      v-if="!unsorted"
+      :name="isAscending ? 'keyboard_arrow_down' : 'keyboard_arrow_up'"
+      class="sort-icon"
+    />
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue'
-
-const { isAscending, unsorted } = defineProps(['isAscending', 'unsorted'])
-
+const { isAscending, unsorted } = defineProps(["isAscending", "unsorted"]);
 </script>
 
 <style scoped lang="scss">
@@ -21,7 +22,7 @@ const { isAscending, unsorted } = defineProps(['isAscending', 'unsorted'])
 
   .sort-icon {
     opacity: 0;
-    transition: .2s;
+    transition: 0.2s;
     width: 0;
   }
 

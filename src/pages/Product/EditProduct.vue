@@ -14,10 +14,16 @@
               </div>
               <div class="select-list">
                 <ul>
-                  <li @click="updateStatus('在售')" :class="{ 'text-green': status === '在售' }">
+                  <li
+                    @click="updateStatus('在售')"
+                    :class="{ 'text-green': status === '在售' }"
+                  >
                     在售<q-icon name="done" v-if="status === '在售'" />
                   </li>
-                  <li @click="updateStatus('下架')" :class="{ 'text-red': status === '下架' }">
+                  <li
+                    @click="updateStatus('下架')"
+                    :class="{ 'text-red': status === '下架' }"
+                  >
                     下架<q-icon name="done" v-if="status === '下架'" />
                   </li>
                 </ul>
@@ -29,33 +35,81 @@
             <form action="/abc" ref="productForm" @submit.prevent="submitForm">
               <!-- 商品信息编辑 -->
               <ul class="product-info-list">
-                <li class="product-info-item" v-for="item in form" :key="item.index">
+                <li
+                  class="product-info-item"
+                  v-for="item in form"
+                  :key="item.index"
+                >
                   <label :for="item.key" class="product-info-label">{{
                     item.title
                   }}</label>
-                  <input type="text" :name="item.key" v-model="formData[item.key]" :required="item.required"
-                    :readonly="item.readonly" :disabled="item.disabled" class="product-info-input"
-                    :class="valueChecked && !formData[item.key] ? 'empty' : ''" :placeholder="item.title" />
+                  <input
+                    type="text"
+                    :name="item.key"
+                    v-model="formData[item.key]"
+                    :required="item.required"
+                    :readonly="item.readonly"
+                    :disabled="item.disabled"
+                    class="product-info-input"
+                    :class="valueChecked && !formData[item.key] ? 'empty' : ''"
+                    :placeholder="item.title"
+                  />
                   <div class="tips-box">
-                    <label :for="item.key" v-if="valueChecked && !formData[item.key]" class="tips">值不能为空</label>
+                    <label
+                      :for="item.key"
+                      v-if="valueChecked && !formData[item.key]"
+                      class="tips"
+                      >值不能为空</label
+                    >
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="description" class="product-info-label">商品描述</label>
-                  <q-editor v-model="formData.description" placeholder="请输入商品描述" min-height="10rem"
-                    :class="valueChecked && !formData.description ? 'empty' : ''" />
+                  <label for="description" class="product-info-label"
+                    >商品描述</label
+                  >
+                  <q-editor
+                    v-model="formData.description"
+                    placeholder="请输入商品描述"
+                    min-height="10rem"
+                    :class="
+                      valueChecked && !formData.description ? 'empty' : ''
+                    "
+                  />
                   <div class="tips-box">
-                    <label for="description" v-if="valueChecked && !formData.description" class="tips">值不能为空</label>
+                    <label
+                      for="description"
+                      v-if="valueChecked && !formData.description"
+                      class="tips"
+                      >值不能为空</label
+                    >
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="created-at" class="product-info-label">创建时间</label>
-                  <input type="text" name="created-at" disabled class="product-info-input" placeholder="商品编号" />
+                  <label for="created-at" class="product-info-label"
+                    >创建时间</label
+                  >
+                  <input
+                    type="text"
+                    name="created-at"
+                    disabled
+                    v-model="formData.created_at"
+                    class="product-info-input"
+                    placeholder="商品编号"
+                  />
                   <div class="tips-box"></div>
                 </li>
                 <li class="product-info-item">
-                  <label for="updated-at" class="product-info-label">最后更新</label>
-                  <input type="text" name="updated-at" disabled class="product-info-input" placeholder="商品编号" />
+                  <label for="updated-at" class="product-info-label"
+                    >最后更新</label
+                  >
+                  <input
+                    type="text"
+                    name="updated-at"
+                    disabled
+                    v-model="formData.updated_at"
+                    class="product-info-input"
+                    placeholder="商品编号"
+                  />
                   <div class="tips-box"></div>
                 </li>
               </ul>
@@ -65,29 +119,57 @@
         <div class="variants-box">
           <div class="header">
             <span class="header-title">商品变体列表</span>
-            <q-btn size="15px" :class="allSelectedStatus ? 'text-white' : 'text-black'" unelevated @click="allSelected"
-              :color="allSelectedStatus ? 'primary' : 'grey-1'">全选</q-btn>
-            <q-btn color="accent" icon="loyalty" size="13px" class="btn set-discount-btn" :disable="!checkedVariant">
+            <q-btn
+              size="15px"
+              :class="allSelectedStatus ? 'text-white' : 'text-black'"
+              unelevated
+              @click="allSelected"
+              :color="allSelectedStatus ? 'primary' : 'grey-1'"
+              >全选</q-btn
+            >
+            <q-btn
+              color="accent"
+              icon="loyalty"
+              size="13px"
+              class="btn set-discount-btn"
+              :disable="!checkedVariant"
+            >
               <!-- <span>折扣</span> -->
               <q-tooltip>批量设置折扣</q-tooltip>
             </q-btn>
-            <q-btn color="negative" icon="delete_sweep" size="15px" class="btn delete-btn" :disable="!checkedVariant"
+            <q-btn
+              color="negative"
+              icon="delete_sweep"
+              size="15px"
+              class="btn delete-btn"
+              :disable="!checkedVariant"
               @click="
                 deleteEventConfirm = true;
-              deleteVariantID = 0;
-              ">
+                deleteVariantID = 0;
+              "
+            >
               <!-- <span>删除</span> -->
               <q-tooltip>批量删除</q-tooltip>
             </q-btn>
-            <q-btn color="primary" icon="add" size="15px" class="btn add-variant-btn" @click="updateVariant(0)">
+            <q-btn
+              color="primary"
+              icon="add"
+              size="15px"
+              class="btn add-variant-btn"
+              @click="updateVariant(0)"
+            >
               <q-tooltip>添加商品变体</q-tooltip>
             </q-btn>
           </div>
           <div class="variants">
             <transition-group name="slide">
               <template v-for="variant in variants" :key="variant">
-                <VariantCard :variant="variant" @deleteVariant="deleteVariant" @updateVariant="updateVariant"
-                  @click="handleClickVariant(variant)" />
+                <VariantCard
+                  :variant="variant"
+                  @deleteVariant="deleteVariant"
+                  @updateVariant="updateVariant"
+                  @click="handleClickVariant(variant)"
+                />
               </template>
             </transition-group>
           </div>
@@ -95,11 +177,17 @@
       </template>
     </Stepper>
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox @cancel="deleteEventConfirm = false" @deleteEvent="deleteEvent"></PromptBox>
+      <PromptBox
+        @cancel="deleteEventConfirm = false"
+        @deleteEvent="deleteEvent"
+      ></PromptBox>
     </q-dialog>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant @addVariant="addVariant" @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="updateVariantInfo" />
+      <UpdateVariant
+        @addVariant="addVariant"
+        @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="updateVariantInfo"
+      />
     </q-dialog>
   </div>
 </template>
@@ -114,6 +202,7 @@ import { isAnyObjectValueEmpty } from "src/utils/utils.js";
 import { deleteData, fetchData } from "src/services/api";
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { showNotif } from "src/utils/utils.js";
+import { Decrypt } from "src/utils/secret";
 import { useRoute } from "vue-router";
 
 const variants = ref([]);
@@ -144,7 +233,7 @@ const form = [
     title: "商品编号",
     key: "product_id",
     required: true,
-    disabled: route.params.id
+    disabled: route.params.id,
   },
   {
     title: "商品名称",
@@ -153,16 +242,20 @@ const form = [
   },
   {
     title: "商品分类",
-    key: "category",
+    key: "category_name",
     required: true,
-  }
+  },
 ];
 
 const formData = ref({
   product_id: route.params.id || "",
   product_name: "",
-  category: "",
-  description: ""
+  category_name: "",
+  description: "",
+  created_at: "",
+  updated_at: "",
+  promo_image: "",
+  product_status: "",
 });
 
 // 监视数组对象里面的checked属性
@@ -175,6 +268,7 @@ watch(
   { deep: true }
 );
 
+// 变体卡片点击事件
 const handleClickVariant = (variant) => {
   const clickedVariant = variants.value.find(
     (item) => item.variant_id === variant.variant_id
@@ -182,6 +276,7 @@ const handleClickVariant = (variant) => {
   clickedVariant.checked = !clickedVariant.checked;
 };
 
+// 全选按钮
 const allSelected = () => {
   allSelectedStatus.value = !allSelectedStatus.value;
 
@@ -210,13 +305,14 @@ const fetchDataAndSetRows = async () => {
 };
 
 /**
- * 子组件调用方法
+ * 单卡片删除
  */
 const deleteVariant = (variant_id) => {
   deleteEventConfirm.value = true;
   deleteVariantID.value = variant_id;
 };
 
+// 卡片修改事件
 const updateVariant = (variant_id) => {
   UpdateVariantCard.value = true;
   updateVariantInfo.value = variants.value.find(
@@ -224,6 +320,7 @@ const updateVariant = (variant_id) => {
   );
 };
 
+// 删除事件
 const deleteEvent = () => {
   if (deleteVariantID.value) {
     // 单数据删除
@@ -248,12 +345,14 @@ const deleteDataEvent = async (data) => {
   deleteEventConfirm.value = false;
 };
 
+// 添加商品
 const addVariant = (variant) => {
   variants.value.push(variant);
   UpdateVariantCard.value = false;
   showNotif("positive", "成功添加", "check");
 };
 
+// 判断数据是否为空
 const isEmpty = () => {
   if (isAnyObjectValueEmpty(formData.value)) {
     showNotif("black", "信息未填写", "warning");
@@ -271,7 +370,20 @@ const statusColor = computed(() => {
   return status.value === "在售" ? "green" : "red";
 });
 
-onMounted(fetchDataAndSetRows);
+/**
+ * 获取地址栏商品信息并解密
+ */
+const decrypt = () => {
+  // 如果地址栏没有参数不执行
+  if (!route.params.id) return;
+  const ciphertext = route.query.p.split(" ").join("+");
+  formData.value = Decrypt(ciphertext);
+  console.log(formData.value.category_name);
+};
+
+onMounted(() => {
+  fetchDataAndSetRows(), decrypt();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -391,17 +503,21 @@ onMounted(fetchDataAndSetRows);
     }
 
     .status-dot.green {
-      background: radial-gradient(circle,
-          #17c653 20%,
-          lighten(#17c653, 45%) 60%,
-          transparent 90%);
+      background: radial-gradient(
+        circle,
+        #17c653 20%,
+        lighten(#17c653, 45%) 60%,
+        transparent 90%
+      );
     }
 
     .status-dot.red {
-      background: radial-gradient(circle,
-          #f8285a 20%,
-          lighten(#f8285a, 45%) 60%,
-          transparent 90%);
+      background: radial-gradient(
+        circle,
+        #f8285a 20%,
+        lighten(#f8285a, 45%) 60%,
+        transparent 90%
+      );
     }
   }
 

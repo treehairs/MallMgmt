@@ -33,8 +33,6 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from "vue";
-
 const props = defineProps(["variant"]);
 const emit = defineEmits(["deleteVariant", "updateVariant"]);
 const variant = props.variant;

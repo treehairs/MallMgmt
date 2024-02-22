@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import Checkbox from "../Common/Checkbox.vue";
 import EmptyBox from "../Common/EmptyBox.vue";
 import TableHeader from "../Common/TableHeader.vue";
