@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="select-input-container">
     <div class="input-box" @click="show = !show">
       <input
         type="text"
         class="input"
         :class="hide"
-        placeholder="请选择"
+        :placeholder="default_value"
         readonly
         v-model="filterData"
       />
@@ -42,25 +42,38 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  defineProps,
-  defineEmits,
-  onMounted,
-  onUnmounted,
-  watchEffect,
-  watch,
-} from "vue";
+import { ref, computed, onMounted, onUnmounted, watchEffect, watch } from "vue";
 
-const value = ref("");
 const show = ref(false);
-const props = defineProps(["data", "filterConditions"]);
-const emit = defineEmits(["selectedChanged"]);
+const props = defineProps([
+  "data",
+  "filterConditions",
+  "single_choice",
+  "default_value",
+]);
+const emit = defineEmits(["selectedChanged", "selectedData"]);
 const data = ref(props.data);
+const single_choice = props.single_choice || false;
+const default_value = props.default_value || "请选择";
+console.log(props.default_value);
 const filterConditions = ref(props.filterConditions);
 const hide = filterConditions.value + "-hide";
 const dataCopy = ref([...props.data]);
+// 获取被选中的列名
+const selectedData = computed(() =>
+  data.value.filter((item) => item[hide] === true)
+);
+
+// 选中的数据
+const filterData = computed(() =>
+  selectedData.value.map((item) => item[filterConditions.value])
+);
+
+// 监听 selectedData 变化
+watch(selectedData, () => {
+  // 通知父组件
+  emit("selectedChanged", filterData.value, filterConditions);
+});
 
 // 数据去重
 function removeDuplicates(arr, uniId) {
@@ -70,7 +83,12 @@ function removeDuplicates(arr, uniId) {
 
 // 监听列名选项点击事件
 const handleItemClick = (item) => {
+  // 单选
+  if (single_choice) data.value.map((item) => (item[hide] = false));
+  // 多选
   item[hide] = item[hide] === undefined ? true : !item[hide];
+
+  emit("selectedData", filterData);
 };
 
 // 清除已选中的选项
@@ -78,14 +96,6 @@ const clearSelected = () => {
   dataCopy.value.forEach((item) => (item[hide] = false));
   show.value = false;
 };
-
-// 获取被选中的列名
-const selectedData = computed(() =>
-  data.value.filter((item) => item[hide] === true)
-);
-const filterData = computed(() =>
-  selectedData.value.map((item) => item[filterConditions.value])
-);
 
 // 点击外部关闭
 const handleClickOutside = (e) => {
@@ -101,12 +111,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
-});
-
-// 监听 selectedData 变化
-watch(selectedData, () => {
-  // 通知父组件
-  emit("selectedChanged", filterData.value, filterConditions);
 });
 </script>
 
@@ -125,7 +129,9 @@ $input-height: 42px;
   opacity: 0;
 }
 
-.container {
+.select-input-container {
+  display: flex;
+  flex-direction: column;
   .input-box {
     width: 100%;
     height: $input-height;

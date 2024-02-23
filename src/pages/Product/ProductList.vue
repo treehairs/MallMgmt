@@ -342,7 +342,6 @@ const deleteEvent = () => {
 
 const handleEdit = (item) => {
   const ciphertext = Encrypt(item); //加密商品数据
-  console.log(Decrypt(ciphertext)); // 数据正确
   router.push(`/product/edit/${item.product_id}?p=${ciphertext}`);
 };
 

@@ -8,25 +8,15 @@
               <UploadImage />
             </div>
             <div class="product-status">
+              <div class="status-title">商品状态</div>
               <div class="status-info">
-                <span class="text">{{ status }}</span>
-                <span class="status-dot" :class="statusColor"></span>
-              </div>
-              <div class="select-list">
-                <ul>
-                  <li
-                    @click="updateStatus('在售')"
-                    :class="{ 'text-green': status === '在售' }"
-                  >
-                    在售<q-icon name="done" v-if="status === '在售'" />
-                  </li>
-                  <li
-                    @click="updateStatus('下架')"
-                    :class="{ 'text-red': status === '下架' }"
-                  >
-                    下架<q-icon name="done" v-if="status === '下架'" />
-                  </li>
-                </ul>
+                <SelectInput
+                  :data="product_status"
+                  filterConditions="status"
+                  :default_value="formData.product_status"
+                  single_choice="true"
+                  @selectedData="selectedData"
+                ></SelectInput>
               </div>
             </div>
           </div>
@@ -197,6 +187,7 @@ import Stepper from "src/components/Common/Stepper.vue";
 import VariantCard from "src/components/Common/VariantCard.vue";
 import UpdateVariant from "src/components/Common/UpdateVariant.vue";
 import UploadImage from "src/components/Common/UploadImage.vue";
+import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
 import { isAnyObjectValueEmpty } from "src/utils/utils.js";
 import { deleteData, fetchData } from "src/services/api";
@@ -247,6 +238,18 @@ const form = [
   },
 ];
 
+const product_status = [
+  {
+    status: "在售",
+  },
+  {
+    status: "下架",
+  },
+  {
+    status: "预售",
+  },
+];
+
 const formData = ref({
   product_id: route.params.id || "",
   product_name: "",
@@ -283,6 +286,12 @@ const allSelected = () => {
   variants.value.map((item) => {
     item.checked = allSelectedStatus.value;
   });
+};
+
+// 获取子组件传递的statu值
+const selectedData = (data) => {
+  formData.value.product_status = data.status;
+  console.log(formData.value.product_status);
 };
 
 /**
@@ -378,7 +387,7 @@ const decrypt = () => {
   if (!route.params.id) return;
   const ciphertext = route.query.p.split(" ").join("+");
   formData.value = Decrypt(ciphertext);
-  console.log(formData.value.category_name);
+  console.log(formData.value.product_status);
 };
 
 onMounted(() => {
@@ -474,18 +483,18 @@ onMounted(() => {
   border: 1px solid #f1f1f4;
   margin-top: 30px;
   border-radius: 10px;
-  height: 70px;
-  overflow: hidden;
+  height: 120px;
   position: relative;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  padding: 15px;
 
+  .status-title {
+  }
   .status-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
-    padding: 0 40px;
-    height: 100%;
-    position: absolute;
 
     .text {
       height: 100%;
