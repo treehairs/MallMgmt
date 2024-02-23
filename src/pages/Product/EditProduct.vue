@@ -8,15 +8,13 @@
               <UploadImage />
             </div>
             <div class="product-status">
-              <div class="status-title">商品状态</div>
+              <div class="status-header"><span class="status-title">商品状态</span><span class="status-dot"
+                  :class="statusColor"></span>
+              </div>
               <div class="status-info">
-                <SelectInput
-                  :data="product_status"
-                  filterConditions="status"
-                  :default_value="formData.product_status"
-                  single_choice="true"
-                  @selectedData="selectedData"
-                ></SelectInput>
+                <SelectInput :data="product_status_list" filterConditions="status"
+                  :default_value="formData.product_status" single_choice="true" @selectedData="selectedData">
+                </SelectInput>
               </div>
             </div>
           </div>
@@ -25,81 +23,33 @@
             <form action="/abc" ref="productForm" @submit.prevent="submitForm">
               <!-- 商品信息编辑 -->
               <ul class="product-info-list">
-                <li
-                  class="product-info-item"
-                  v-for="item in form"
-                  :key="item.index"
-                >
-                  <label :for="item.key" class="product-info-label">{{
-                    item.title
-                  }}</label>
-                  <input
-                    type="text"
-                    :name="item.key"
-                    v-model="formData[item.key]"
-                    :required="item.required"
-                    :readonly="item.readonly"
-                    :disabled="item.disabled"
-                    class="product-info-input"
-                    :class="valueChecked && !formData[item.key] ? 'empty' : ''"
-                    :placeholder="item.title"
-                  />
+                <li class="product-info-item" v-for="item in form" :key="item.index">
+                  <label :for="item.key" class="product-info-label">{{ item.title }}</label>
+                  <input type="text" :name="item.key" v-model="formData[item.key]" :required="item.required"
+                    :readonly="item.readonly" :disabled="item.disabled" class="product-info-input"
+                    :class="valueChecked && !formData[item.key] ? 'empty' : ''" :placeholder="item.title" />
                   <div class="tips-box">
-                    <label
-                      :for="item.key"
-                      v-if="valueChecked && !formData[item.key]"
-                      class="tips"
-                      >值不能为空</label
-                    >
+                    <label :for="item.key" v-if="valueChecked && !formData[item.key]" class="tips">值不能为空</label>
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="description" class="product-info-label"
-                    >商品描述</label
-                  >
-                  <q-editor
-                    v-model="formData.description"
-                    placeholder="请输入商品描述"
-                    min-height="10rem"
-                    :class="
-                      valueChecked && !formData.description ? 'empty' : ''
-                    "
-                  />
+                  <label for="description" class="product-info-label">商品描述</label>
+                  <q-editor v-model="formData.description" placeholder="请输入商品描述" min-height="10rem" :class="valueChecked && !formData.description ? 'empty' : ''
+                    " />
                   <div class="tips-box">
-                    <label
-                      for="description"
-                      v-if="valueChecked && !formData.description"
-                      class="tips"
-                      >值不能为空</label
-                    >
+                    <label for="description" v-if="valueChecked && !formData.description" class="tips">值不能为空</label>
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="created-at" class="product-info-label"
-                    >创建时间</label
-                  >
-                  <input
-                    type="text"
-                    name="created-at"
-                    disabled
-                    v-model="formData.created_at"
-                    class="product-info-input"
-                    placeholder="商品编号"
-                  />
+                  <label for="created-at" class="product-info-label">创建时间</label>
+                  <input type="text" name="created-at" disabled v-model="formData.created_at" class="product-info-input"
+                    placeholder="商品编号" />
                   <div class="tips-box"></div>
                 </li>
                 <li class="product-info-item">
-                  <label for="updated-at" class="product-info-label"
-                    >最后更新</label
-                  >
-                  <input
-                    type="text"
-                    name="updated-at"
-                    disabled
-                    v-model="formData.updated_at"
-                    class="product-info-input"
-                    placeholder="商品编号"
-                  />
+                  <label for="updated-at" class="product-info-label">最后更新</label>
+                  <input type="text" name="updated-at" disabled v-model="formData.updated_at" class="product-info-input"
+                    placeholder="商品编号" />
                   <div class="tips-box"></div>
                 </li>
               </ul>
@@ -109,57 +59,29 @@
         <div class="variants-box">
           <div class="header">
             <span class="header-title">商品变体列表</span>
-            <q-btn
-              size="15px"
-              :class="allSelectedStatus ? 'text-white' : 'text-black'"
-              unelevated
-              @click="allSelected"
-              :color="allSelectedStatus ? 'primary' : 'grey-1'"
-              >全选</q-btn
-            >
-            <q-btn
-              color="accent"
-              icon="loyalty"
-              size="13px"
-              class="btn set-discount-btn"
-              :disable="!checkedVariant"
-            >
+            <q-btn size="15px" :class="allSelectedStatus ? 'text-white' : 'text-black'" unelevated @click="allSelected"
+              :color="allSelectedStatus ? 'primary' : 'grey-1'">全选</q-btn>
+            <q-btn color="accent" icon="loyalty" size="13px" class="btn set-discount-btn" :disable="!checkedVariant">
               <!-- <span>折扣</span> -->
               <q-tooltip>批量设置折扣</q-tooltip>
             </q-btn>
-            <q-btn
-              color="negative"
-              icon="delete_sweep"
-              size="15px"
-              class="btn delete-btn"
-              :disable="!checkedVariant"
+            <q-btn color="negative" icon="delete_sweep" size="15px" class="btn delete-btn" :disable="!checkedVariant"
               @click="
                 deleteEventConfirm = true;
-                deleteVariantID = 0;
-              "
-            >
+              deleteVariantID = 0;
+              ">
               <!-- <span>删除</span> -->
               <q-tooltip>批量删除</q-tooltip>
             </q-btn>
-            <q-btn
-              color="primary"
-              icon="add"
-              size="15px"
-              class="btn add-variant-btn"
-              @click="updateVariant(0)"
-            >
+            <q-btn color="primary" icon="add" size="15px" class="btn add-variant-btn" @click="updateVariant(0)">
               <q-tooltip>添加商品变体</q-tooltip>
             </q-btn>
           </div>
           <div class="variants">
             <transition-group name="slide">
               <template v-for="variant in variants" :key="variant">
-                <VariantCard
-                  :variant="variant"
-                  @deleteVariant="deleteVariant"
-                  @updateVariant="updateVariant"
-                  @click="handleClickVariant(variant)"
-                />
+                <VariantCard :variant="variant" @deleteVariant="deleteVariant" @updateVariant="updateVariant"
+                  @click="handleClickVariant(variant)" />
               </template>
             </transition-group>
           </div>
@@ -167,17 +89,11 @@
       </template>
     </Stepper>
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox
-        @cancel="deleteEventConfirm = false"
-        @deleteEvent="deleteEvent"
-      ></PromptBox>
+      <PromptBox @cancel="deleteEventConfirm = false" @deleteEvent="deleteEvent"></PromptBox>
     </q-dialog>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant
-        @addVariant="addVariant"
-        @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="updateVariantInfo"
-      />
+      <UpdateVariant @addVariant="addVariant" @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="updateVariantInfo" />
     </q-dialog>
   </div>
 </template>
@@ -238,28 +154,39 @@ const form = [
   },
 ];
 
-const product_status = [
+const product_status_list = [
   {
     status: "在售",
+    color: "green"
   },
   {
     status: "下架",
+    color: "red"
   },
   {
     status: "预售",
+    color: "yellow"
   },
 ];
 
-const formData = ref({
-  product_id: route.params.id || "",
-  product_name: "",
-  category_name: "",
-  description: "",
-  created_at: "",
-  updated_at: "",
-  promo_image: "",
-  product_status: "",
-});
+const formData = computed(() => {
+  // 如果地址栏没有参数不执行
+  if (!route.params.id) return {
+    product_id: route.params.id || "",
+    product_name: "",
+    category_name: "",
+    description: "",
+    created_at: "",
+    updated_at: "",
+    promo_image: "",
+    product_status: "在售",
+  }
+  const ciphertext = route.query.p.split(" ").join("+");
+  return Decrypt(ciphertext);
+})
+
+const statusColor = ref(product_status_list.find(item => item.status === formData.value.product_status).color);
+
 
 // 监视数组对象里面的checked属性
 watch(
@@ -288,10 +215,11 @@ const allSelected = () => {
   });
 };
 
+
 // 获取子组件传递的statu值
 const selectedData = (data) => {
-  formData.value.product_status = data.status;
-  console.log(formData.value.product_status);
+  formData.value.product_status = data[0];
+  statusColor.value = product_status_list.find(item => item.status === formData.value.product_status).color
 };
 
 /**
@@ -375,23 +303,15 @@ const updateStatus = (newStatus) => {
   status.value = newStatus;
 };
 
-const statusColor = computed(() => {
-  return status.value === "在售" ? "green" : "red";
-});
 
-/**
- * 获取地址栏商品信息并解密
- */
-const decrypt = () => {
-  // 如果地址栏没有参数不执行
-  if (!route.params.id) return;
-  const ciphertext = route.query.p.split(" ").join("+");
-  formData.value = Decrypt(ciphertext);
-  console.log(formData.value.product_status);
-};
+
+watch(formData.value, (newVal, oldVal) => {
+  console.log("watch触发");
+  statusColor.value
+}, { deep: true })
 
 onMounted(() => {
-  fetchDataAndSetRows(), decrypt();
+  fetchDataAndSetRows();
 });
 </script>
 
@@ -491,8 +411,32 @@ onMounted(() => {
   flex-direction: column;
   padding: 15px;
 
-  .status-title {
+  .status-header {
+    display: flex;
+    justify-content: space-between;
+
+    .status-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      animation: blink 3s infinite;
+    }
+
+    .status-dot.green {
+      background: radial-gradient(circle,
+          #17c653 20%,
+          lighten(#17c653, 45%) 60%,
+          transparent 90%);
+    }
+
+    .status-dot.red {
+      background: radial-gradient(circle,
+          #f8285a 20%,
+          lighten(#f8285a, 45%) 60%,
+          transparent 90%);
+    }
   }
+
   .status-info {
     width: 100%;
 
@@ -504,30 +448,7 @@ onMounted(() => {
       font-family: yuanti;
     }
 
-    .status-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      animation: blink 3s infinite;
-    }
 
-    .status-dot.green {
-      background: radial-gradient(
-        circle,
-        #17c653 20%,
-        lighten(#17c653, 45%) 60%,
-        transparent 90%
-      );
-    }
-
-    .status-dot.red {
-      background: radial-gradient(
-        circle,
-        #f8285a 20%,
-        lighten(#f8285a, 45%) 60%,
-        transparent 90%
-      );
-    }
   }
 
   .select-list {
