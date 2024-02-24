@@ -1,16 +1,37 @@
 <template>
   <div class="select-input-container">
     <div class="input-box" @click="show = !show">
-      <input type="text" class="input" :class="hide" :placeholder="default_value" readonly v-model="filterData" />
-      <q-icon name="close" class="icon close-icon" v-show="selectedData.length !== 0"
-        @click.stop="clearSelected"></q-icon>
-      <q-icon name="expand_more" class="icon expand-icon" :class="show ? 'hideList' : ''" @click.stop="show = !show" />
+      <input
+        type="text"
+        class="input"
+        :class="hide"
+        :placeholder="default_value"
+        readonly
+        v-model="filterData"
+      />
+      <q-icon
+        name="close"
+        class="icon close-icon"
+        v-show="selectedData.length !== 0 && !hide_close_icon"
+        @click.stop="clearSelected"
+      ></q-icon>
+      <q-icon
+        name="expand_more"
+        class="icon expand-icon"
+        :class="show ? 'hideList' : ''"
+        @click.stop="show = !show"
+      />
     </div>
     <transition name="fade">
       <div class="select-box" v-show="show">
         <ul>
-          <li class="select-item" :class="item[hide] ? 'checked' : ''" v-for="item in data" :key="item.index"
-            @click.stop="handleItemClick(item)">
+          <li
+            class="select-item"
+            :class="item[hide] ? 'checked' : ''"
+            v-for="item in data"
+            :key="item.index"
+            @click.stop="handleItemClick(item)"
+          >
             <span>{{ item[filterConditions] }}</span>
             <q-icon name="check" v-show="item[hide]" />
           </li>
@@ -29,11 +50,13 @@ const props = defineProps([
   "filterConditions",
   "single_choice",
   "default_value",
+  "hide_close_icon",
 ]);
 const emit = defineEmits(["selectedChanged", "selectedData"]);
 const data = ref(props.data);
 const single_choice = props.single_choice || false;
 const default_value = props.default_value || "请选择";
+const hide_close_icon = props.hide_close_icon || false;
 const filterConditions = ref(props.filterConditions);
 const hide = filterConditions.value + "-hide";
 const dataCopy = ref([...props.data]);
@@ -67,7 +90,6 @@ const handleItemClick = (item) => {
   item[hide] = item[hide] === undefined ? true : !item[hide];
 
   emit("selectedData", filterData.value);
-  console.log(filterData.value);
 };
 
 // 清除已选中的选项

@@ -24,9 +24,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 
 const props = defineProps(["src"]);
+const emit = defineEmits(["imageData"]);
 const image = ref({ url: props.src, name: "", size: 0 });
 
 const clearImage = () => {
@@ -42,6 +43,8 @@ const handleUpload = (event) => {
   image.value.name = file.name.slice(0, file.name.lastIndexOf("."));
   image.value.size = file.size;
   reader.readAsDataURL(file);
+
+  emit("imageData", file);
 };
 </script>
 

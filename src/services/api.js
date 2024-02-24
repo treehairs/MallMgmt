@@ -38,3 +38,25 @@ export const deleteData = async (path, id) => {
     throw error;
   }
 }
+
+/**
+ * 删除商品
+ * @param {string} path - API路径
+ * @param {Array} data  - 数据
+ * @returns {Boolean}   - 删除结果
+ */
+export const updateData = async (path, data) => {
+  try {
+    const result = await axios({
+      url: url + path,
+      method: 'POST',
+      data: {
+        data
+      }
+    })
+    return result.status === 200 ? true : false
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}

@@ -1,19 +1,32 @@
 <template>
   <div>
-    <Stepper :steps="steps" :isEmpty="isEmpty">
+    <Stepper
+      :steps="steps"
+      :isEmpty="isEmpty"
+      @handleSubmitEvent="handleSubmitEvent"
+    >
       <template v-slot:default="{ current }">
         <div class="container" :id="current">
           <div class="left">
             <div class="promo-image">
-              <UploadImage />
+              <UploadImage @imageData="handleUploadImage" />
             </div>
             <div class="product-status">
-              <div class="status-header"><span class="status-title">商品状态</span><span class="status-dot"
-                  :class="statusColor"></span>
+              <div class="status-header">
+                <span class="status-title">商品状态</span>
+                <div class="status-dot" :class="statusColor">
+                  <div class="status-dot-point"></div>
+                </div>
               </div>
               <div class="status-info">
-                <SelectInput :data="product_status_list" filterConditions="status"
-                  :default_value="formData.product_status" single_choice="true" @selectedData="selectedData">
+                <SelectInput
+                  :data="product_status_list"
+                  filterConditions="status"
+                  :default_value="formData.product_status"
+                  single_choice="true"
+                  @selectedData="selectedData"
+                  hide_close_icon="true"
+                >
                 </SelectInput>
               </div>
             </div>
@@ -23,33 +36,81 @@
             <form action="/abc" ref="productForm" @submit.prevent="submitForm">
               <!-- 商品信息编辑 -->
               <ul class="product-info-list">
-                <li class="product-info-item" v-for="item in form" :key="item.index">
-                  <label :for="item.key" class="product-info-label">{{ item.title }}</label>
-                  <input type="text" :name="item.key" v-model="formData[item.key]" :required="item.required"
-                    :readonly="item.readonly" :disabled="item.disabled" class="product-info-input"
-                    :class="valueChecked && !formData[item.key] ? 'empty' : ''" :placeholder="item.title" />
+                <li
+                  class="product-info-item"
+                  v-for="item in form"
+                  :key="item.index"
+                >
+                  <label :for="item.key" class="product-info-label">{{
+                    item.title
+                  }}</label>
+                  <input
+                    type="text"
+                    :name="item.key"
+                    v-model="formData[item.key]"
+                    :required="item.required"
+                    :readonly="item.readonly"
+                    :disabled="item.disabled"
+                    class="product-info-input"
+                    :class="valueChecked && !formData[item.key] ? 'empty' : ''"
+                    :placeholder="item.title"
+                  />
                   <div class="tips-box">
-                    <label :for="item.key" v-if="valueChecked && !formData[item.key]" class="tips">值不能为空</label>
+                    <label
+                      :for="item.key"
+                      v-if="valueChecked && !formData[item.key]"
+                      class="tips"
+                      >值不能为空</label
+                    >
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="description" class="product-info-label">商品描述</label>
-                  <q-editor v-model="formData.description" placeholder="请输入商品描述" min-height="10rem" :class="valueChecked && !formData.description ? 'empty' : ''
-                    " />
+                  <label for="description" class="product-info-label"
+                    >商品描述</label
+                  >
+                  <q-editor
+                    v-model="formData.description"
+                    placeholder="请输入商品描述"
+                    min-height="10rem"
+                    :class="
+                      valueChecked && !formData.description ? 'empty' : ''
+                    "
+                  />
                   <div class="tips-box">
-                    <label for="description" v-if="valueChecked && !formData.description" class="tips">值不能为空</label>
+                    <label
+                      for="description"
+                      v-if="valueChecked && !formData.description"
+                      class="tips"
+                      >值不能为空</label
+                    >
                   </div>
                 </li>
                 <li class="product-info-item">
-                  <label for="created-at" class="product-info-label">创建时间</label>
-                  <input type="text" name="created-at" disabled v-model="formData.created_at" class="product-info-input"
-                    placeholder="商品编号" />
+                  <label for="created-at" class="product-info-label"
+                    >创建时间</label
+                  >
+                  <input
+                    type="text"
+                    name="created-at"
+                    disabled
+                    v-model="formData.created_at"
+                    class="product-info-input"
+                    placeholder="商品编号"
+                  />
                   <div class="tips-box"></div>
                 </li>
                 <li class="product-info-item">
-                  <label for="updated-at" class="product-info-label">最后更新</label>
-                  <input type="text" name="updated-at" disabled v-model="formData.updated_at" class="product-info-input"
-                    placeholder="商品编号" />
+                  <label for="updated-at" class="product-info-label"
+                    >最后更新</label
+                  >
+                  <input
+                    type="text"
+                    name="updated-at"
+                    disabled
+                    v-model="formData.updated_at"
+                    class="product-info-input"
+                    placeholder="商品编号"
+                  />
                   <div class="tips-box"></div>
                 </li>
               </ul>
@@ -59,29 +120,57 @@
         <div class="variants-box">
           <div class="header">
             <span class="header-title">商品变体列表</span>
-            <q-btn size="15px" :class="allSelectedStatus ? 'text-white' : 'text-black'" unelevated @click="allSelected"
-              :color="allSelectedStatus ? 'primary' : 'grey-1'">全选</q-btn>
-            <q-btn color="accent" icon="loyalty" size="13px" class="btn set-discount-btn" :disable="!checkedVariant">
+            <q-btn
+              size="15px"
+              :class="allSelectedStatus ? 'text-white' : 'text-black'"
+              unelevated
+              @click="allSelected"
+              :color="allSelectedStatus ? 'primary' : 'grey-1'"
+              >全选</q-btn
+            >
+            <q-btn
+              color="accent"
+              icon="loyalty"
+              size="13px"
+              class="btn set-discount-btn"
+              :disable="!checkedVariant"
+            >
               <!-- <span>折扣</span> -->
               <q-tooltip>批量设置折扣</q-tooltip>
             </q-btn>
-            <q-btn color="negative" icon="delete_sweep" size="15px" class="btn delete-btn" :disable="!checkedVariant"
+            <q-btn
+              color="negative"
+              icon="delete_sweep"
+              size="15px"
+              class="btn delete-btn"
+              :disable="!checkedVariant"
               @click="
                 deleteEventConfirm = true;
-              deleteVariantID = 0;
-              ">
+                deleteVariantID = 0;
+              "
+            >
               <!-- <span>删除</span> -->
               <q-tooltip>批量删除</q-tooltip>
             </q-btn>
-            <q-btn color="primary" icon="add" size="15px" class="btn add-variant-btn" @click="updateVariant(0)">
+            <q-btn
+              color="primary"
+              icon="add"
+              size="15px"
+              class="btn add-variant-btn"
+              @click="updateVariant(0)"
+            >
               <q-tooltip>添加商品变体</q-tooltip>
             </q-btn>
           </div>
           <div class="variants">
             <transition-group name="slide">
               <template v-for="variant in variants" :key="variant">
-                <VariantCard :variant="variant" @deleteVariant="deleteVariant" @updateVariant="updateVariant"
-                  @click="handleClickVariant(variant)" />
+                <VariantCard
+                  :variant="variant"
+                  @deleteVariant="deleteVariant"
+                  @updateVariant="updateVariant"
+                  @click="handleClickVariant(variant)"
+                />
               </template>
             </transition-group>
           </div>
@@ -89,11 +178,17 @@
       </template>
     </Stepper>
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox @cancel="deleteEventConfirm = false" @deleteEvent="deleteEvent"></PromptBox>
+      <PromptBox
+        @cancel="deleteEventConfirm = false"
+        @deleteEvent="deleteEvent"
+      ></PromptBox>
     </q-dialog>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant @addVariant="addVariant" @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="updateVariantInfo" />
+      <UpdateVariant
+        @addVariant="addVariant"
+        @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="updateVariantInfo"
+      />
     </q-dialog>
   </div>
 </template>
@@ -106,7 +201,7 @@ import UploadImage from "src/components/Common/UploadImage.vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
 import { isAnyObjectValueEmpty } from "src/utils/utils.js";
-import { deleteData, fetchData } from "src/services/api";
+import { deleteData, fetchData, updateData } from "src/services/api";
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { showNotif } from "src/utils/utils.js";
 import { Decrypt } from "src/utils/secret";
@@ -157,36 +252,40 @@ const form = [
 const product_status_list = [
   {
     status: "在售",
-    color: "green"
+    color: "green",
   },
   {
     status: "下架",
-    color: "red"
+    color: "red",
   },
   {
     status: "预售",
-    color: "yellow"
+    color: "yellow",
   },
 ];
 
 const formData = computed(() => {
   // 如果地址栏没有参数不执行
-  if (!route.params.id) return {
-    product_id: route.params.id || "",
-    product_name: "",
-    category_name: "",
-    description: "",
-    created_at: "",
-    updated_at: "",
-    promo_image: "",
-    product_status: "在售",
-  }
+  if (!route.params.id)
+    return {
+      product_id: route.params.id || "",
+      product_name: "",
+      category_name: "",
+      description: "",
+      created_at: "",
+      updated_at: "",
+      promo_image: "",
+      product_status: "在售",
+    };
   const ciphertext = route.query.p.split(" ").join("+");
   return Decrypt(ciphertext);
-})
+});
 
-const statusColor = ref(product_status_list.find(item => item.status === formData.value.product_status).color);
-
+const statusColor = ref(
+  product_status_list.find(
+    (item) => item.status === formData.value.product_status
+  ).color
+);
 
 // 监视数组对象里面的checked属性
 watch(
@@ -215,11 +314,12 @@ const allSelected = () => {
   });
 };
 
-
 // 获取子组件传递的statu值
 const selectedData = (data) => {
   formData.value.product_status = data[0];
-  statusColor.value = product_status_list.find(item => item.status === formData.value.product_status).color
+  statusColor.value = product_status_list.find(
+    (item) => item.status === formData.value.product_status
+  ).color;
 };
 
 /**
@@ -299,16 +399,16 @@ const isEmpty = () => {
   return true;
 };
 
-const updateStatus = (newStatus) => {
-  status.value = newStatus;
+// 处理上传图像数据
+const handleUploadImage = (data) => {
+  formData.value.promo_image = data;
 };
 
-
-
-watch(formData.value, (newVal, oldVal) => {
-  console.log("watch触发");
-  statusColor.value
-}, { deep: true })
+// 完成编辑
+const handleSubmitEvent = () => {
+  console.log(formData.value);
+  updateData("/products/" + formData.value.product_id, formData.value);
+};
 
 onMounted(() => {
   fetchDataAndSetRows();
@@ -414,26 +514,61 @@ onMounted(() => {
   .status-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    $status-dot-size: 11px;
 
     .status-dot {
-      width: 20px;
-      height: 20px;
+      width: $status-dot-size;
+      height: $status-dot-size;
       border-radius: 50%;
-      animation: blink 3s infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @mixin flicker($color) {
+      background: $color;
+      &::before {
+        content: "";
+        display: block;
+        width: $status-dot-size;
+        height: $status-dot-size;
+        border-radius: 50%;
+        opacity: 0.7;
+        background: radial-gradient(
+          circle at center,
+          $color 0%,
+          transparent 100%
+        );
+        animation: scale 2s infinite cubic-bezier(0, 0, 0.49, 1.02);
+      }
+    }
+
+    @keyframes scale {
+      0% {
+        transform: scale(1);
+      }
+
+      40%,
+      75% {
+        transform: scale(2.5);
+      }
+
+      78%,
+      100% {
+        opacity: 0;
+      }
     }
 
     .status-dot.green {
-      background: radial-gradient(circle,
-          #17c653 20%,
-          lighten(#17c653, 45%) 60%,
-          transparent 90%);
+      @include flicker(#49c617);
     }
 
     .status-dot.red {
-      background: radial-gradient(circle,
-          #f8285a 20%,
-          lighten(#f8285a, 45%) 60%,
-          transparent 90%);
+      @include flicker(#f8285a);
+    }
+    .status-dot.yellow {
+      @include flicker(#f8d228);
     }
   }
 
@@ -447,8 +582,6 @@ onMounted(() => {
       font-size: 18px;
       font-family: yuanti;
     }
-
-
   }
 
   .select-list {
