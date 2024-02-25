@@ -8,8 +8,14 @@
       <template v-slot:default="{ current }">
         <div class="container" :id="current">
           <div class="left">
-            <div class="promo-image">
-              <UploadImage @imageData="handleUploadImage" />
+            <div class="promo-image-box">
+              <div class="promo-image-title">宣传图编辑</div>
+              <div class="promo-image">
+                <UploadImage @imageData="handleUploadImage" />
+              </div>
+              <div class="promo-image-info">
+                {{ image_info.name }}-{{ image_info.size }}
+              </div>
             </div>
             <div class="product-status">
               <div class="status-header">
@@ -201,7 +207,7 @@ import UploadImage from "src/components/Common/UploadImage.vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
 import { isAnyObjectValueEmpty } from "src/utils/utils.js";
-import { deleteData, fetchData, updateData } from "src/services/api";
+import { deleteData, fetchData } from "src/services/api";
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { showNotif } from "src/utils/utils.js";
 import { Decrypt } from "src/utils/secret";
@@ -218,6 +224,10 @@ const updateVariantInfo = ref({});
 const checkedVariant = ref(false);
 const deleteVariantID = ref(0);
 const route = useRoute();
+const image_info = ref({
+  name: "",
+  size: "",
+});
 const steps = [
   {
     title: "商品编辑",
@@ -401,13 +411,15 @@ const isEmpty = () => {
 
 // 处理上传图像数据
 const handleUploadImage = (data) => {
-  formData.value.promo_image = data;
+  formData.value.promo_image = data.url;
+  image_info.value.name = data.name;
+  image_info.value.size = data.size;
 };
 
 // 完成编辑
 const handleSubmitEvent = () => {
   console.log(formData.value);
-  updateData("/products/" + formData.value.product_id, formData.value);
+  // updateData("/products/" + formData.value.product_id, formData.value);
 };
 
 onMounted(() => {
@@ -609,9 +621,13 @@ onMounted(() => {
   }
 }
 
-.promo-image {
+.promo-image-box {
   width: 100%;
   height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .product-status:hover {

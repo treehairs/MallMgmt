@@ -24,6 +24,8 @@
 </template>
 
 <script setup>
+import { upload } from "src/services/api";
+import { showNotif } from "src/utils/utils.js";
 import { ref } from "vue";
 
 const props = defineProps(["src"]);
@@ -38,13 +40,22 @@ const handleUpload = (event) => {
   const file = event.target.files[0];
   const reader = new FileReader();
   reader.onload = (e) => {
-    image.value.url = e.target.result;
+    // image.value.url = e.target.result;
   };
   image.value.name = file.name.slice(0, file.name.lastIndexOf("."));
   image.value.size = file.size;
   reader.readAsDataURL(file);
 
-  emit("imageData", file);
+  const formData = new FormData();
+  formData.append("file", file);
+
+  upload("/upload/1001/1002", formData)
+    .then((result) => {
+      image.value.url = result;
+      // 上传成功，接收图片地址
+      emit("imageData", image.value);
+    })
+    .catch((err) => showNotif("negative", "上传失败", "error")); // 上传失败
 };
 </script>
 

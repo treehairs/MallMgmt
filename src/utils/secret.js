@@ -9,7 +9,6 @@ const key = "Sufaro6666orafuS";// 密钥
  * @returns 解密后的数据
  */
 export const Decrypt = ciphertext => {
-  console.log(ciphertext, typeof ciphertext);
   const bytes = CryptoJS.AES.decrypt(ciphertext, key);
   const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   //返回解密结果
