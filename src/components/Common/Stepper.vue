@@ -7,26 +7,14 @@
         <div class="step-item" v-ripple:indigo-11 @click="updateStep(step.ID)">
           <div class="step-index">
             <!-- 已完成步骤 -->
-            <div
-              class="step-item-completed bg-primary text-white"
-              v-if="index + 1 > step.ID"
-            >
+            <div class="step-item-completed bg-primary text-white" v-if="index + 1 > step.ID">
               <!-- 自定义图标 -->
-              <q-icon
-                :name="step.completed"
-                class="completed-icon"
-                v-if="step.completed"
-              />
+              <q-icon :name="step.completed" class="completed-icon" v-if="step.completed" />
               <q-icon name="done" v-else class="completed-icon" />
             </div>
             <!-- 未完成步骤 -->
-            <div
-              class="step-item-inactive"
-              :class="
-                index + 1 === step.ID ? 'bg-primary text-white' : 'bg-grey-12'
-              "
-              v-else
-            >
+            <div class="step-item-inactive" :class="index + 1 === step.ID ? 'bg-primary text-white' : 'bg-grey-12'
+              " v-else>
               <q-icon :name="step.inactive" v-if="step.inactive" />
               <span v-else>{{ step.ID }}</span>
             </div>
@@ -36,17 +24,9 @@
             <div class="step-title-description">{{ step.description }}</div>
           </div>
         </div>
-        <q-icon
-          name="chevron_right"
-          size="25px"
-          class="text-primary"
-          v-if="step.ID !== steps.length"
-        />
+        <q-icon name="chevron_right" size="25px" class="text-primary" v-if="step.ID !== steps.length" />
       </template>
-      <div
-        class="underline bg-primary"
-        :style="{ width: underline_size, left: underline_left }"
-      ></div>
+      <div class="underline bg-primary" :style="{ width: underline_size, left: underline_left }"></div>
     </div>
     <div class="step-content">
       <div class="slot-content" :style="{ transform: slotTransformStyle }">
@@ -54,35 +34,15 @@
       </div>
     </div>
     <div class="btns">
-      <q-btn
-        class="btn bg-primary text-white q-px-lg"
-        v-if="index + 1 !== steps.length"
-        @click="handleNext"
-        >继续</q-btn
-      >
-      <q-btn
-        class="btn bg-primary text-white q-px-lg"
-        v-else
-        @click="handleSubmitEvent"
-        >完成</q-btn
-      >
-      <q-btn class="btn text-primary" flat v-if="index !== 0" @click="prev"
-        >返回</q-btn
-      >
+      <q-btn class="btn bg-primary text-white q-px-lg" v-if="index + 1 !== steps.length" @click="handleNext">继续</q-btn>
+      <q-btn class="btn bg-primary text-white q-px-lg" v-else @click="handleSubmitEvent">完成</q-btn>
+      <q-btn class="btn text-primary" flat v-if="index !== 0" @click="prev">返回</q-btn>
     </div>
   </div>
 </template>
 
 <script setup>
-import {
-  ref,
-  defineProps,
-  defineEmits,
-  defineExpose,
-  computed,
-  onMounted,
-  getCurrentInstance,
-} from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps(["steps", "isEmpty"]);
 const emit = defineEmits(["handleSubmitEvent"]);
@@ -212,7 +172,7 @@ $step-index-width: 25px;
   }
 }
 
-::v-deep .slot-content > div {
+::v-deep .slot-content>div {
   width: 100%;
   flex: 0 0 auto;
 }
@@ -254,6 +214,7 @@ $step-index-width: 25px;
     margin: 0 10px;
   }
 }
+
 .body--dark {
   .step-item-inactive {
     color: #000;

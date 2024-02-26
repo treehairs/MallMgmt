@@ -4,16 +4,10 @@
       <div class="btn discount-btn" @click.prevent="">
         <q-icon name="loyalty" />
       </div>
-      <div
-        class="btn update-btn"
-        @click.prevent="updateVariant(variant.variant_id)"
-      >
+      <div class="btn update-btn" @click.prevent="updateVariant(variant.variant_id)">
         <q-icon name="edit" />
       </div>
-      <div
-        class="btn delete-btn"
-        @click.prevent="deleteVariant(variant.variant_id)"
-      >
+      <div class="btn delete-btn" @click.prevent="deleteVariant(variant.variant_id)">
         <q-icon name="close" />
       </div>
     </li>
@@ -112,6 +106,7 @@ const updateVariant = (variant_id) => {
 }
 
 .checked {
+
   &::before,
   &::after {
     width: 100%;
@@ -153,6 +148,7 @@ const updateVariant = (variant_id) => {
   }
 
   @mixin set-btn-color($color) {
+
     // background: $bg;
     &:hover {
       background: darken($color, $amount: 10%);
@@ -243,11 +239,13 @@ const updateVariant = (variant_id) => {
       border-bottom: $border-width solid $border-color;
     }
   }
+
   .checked {
+
     &::before,
     &::after {
       border-color: var(--primary);
-      box-shadow: 0 0 10px #444;
+      box-shadow: 0 0 10px rgb(31, 31, 31);
     }
 
     .btns div {

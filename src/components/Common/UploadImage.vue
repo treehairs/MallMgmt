@@ -5,13 +5,7 @@
         <img src="/icons/add-image.png" class="image-icon" alt="" />
         <img src="/icons/add.png" alt="" class="add-icon" />
       </label>
-      <input
-        type="file"
-        name="upload"
-        id="upload"
-        @change="handleUpload"
-        accept="image/png, image/jpeg"
-      />
+      <input type="file" name="upload" id="upload" @change="handleUpload" accept="image/png, image/jpeg" />
     </div>
     <div class="image-box" v-else>
       <img class="image" :src="image.url" alt="" />
