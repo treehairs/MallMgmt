@@ -1,5 +1,5 @@
 <template>
-  <div class="promo-image">
+  <div class="promo-image" v-bind:class="{ shadow: shadow, square: square }">
     <div class="upload-btn" v-if="!image.url">
       <label for="upload">
         <img src="/icons/add-image.png" class="image-icon" alt="" />
@@ -25,15 +25,25 @@
 
 <script setup>
 import { upload } from "src/services/api";
-import { showNotif } from "src/utils/utils.js";
+import { showNotif, size2Str } from "src/utils/utils.js";
 import { ref } from "vue";
+import { url } from "boot/axios";
 
-const props = defineProps(["src"]);
+const props = defineProps(["src", "shadow", "square"]);
 const emit = defineEmits(["imageData"]);
-const image = ref({ url: props.src, name: "", size: 0 });
+const image = ref({
+  url: props.src ? url + props.src : "",
+  name: "",
+  size: "",
+});
+const shadow = props.shadow;
+const square = props.square;
 
 const clearImage = () => {
   image.value.url = "";
+  image.value.name = "";
+  image.value.size = "";
+  emit("imageData", image.value);
 };
 
 const handleUpload = (event) => {
@@ -43,7 +53,7 @@ const handleUpload = (event) => {
     // image.value.url = e.target.result;
   };
   image.value.name = file.name.slice(0, file.name.lastIndexOf("."));
-  image.value.size = file.size;
+  image.value.size = size2Str(file.size);
   reader.readAsDataURL(file);
 
   const formData = new FormData();
@@ -51,9 +61,11 @@ const handleUpload = (event) => {
 
   upload("/upload/1001/1002", formData)
     .then((result) => {
-      image.value.url = result;
       // 上传成功，接收图片地址
+      image.value.url = result;
       emit("imageData", image.value);
+
+      image.value.url = url + result;
     })
     .catch((err) => showNotif("negative", "上传失败", "error")); // 上传失败
 };
@@ -63,7 +75,6 @@ const handleUpload = (event) => {
 .promo-image {
   width: 100%;
   height: 100%;
-  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03);
   border: 1px solid #f1f1f4;
   background-color: #fdfdfd;
   border-radius: 10px;
@@ -188,6 +199,14 @@ const handleUpload = (event) => {
       opacity: 0;
     }
   }
+}
+
+.shadow {
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03);
+}
+
+.square {
+  border-radius: 0;
 }
 
 @keyframes scale {

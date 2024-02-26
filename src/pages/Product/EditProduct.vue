@@ -11,10 +11,15 @@
             <div class="promo-image-box">
               <div class="promo-image-title">宣传图编辑</div>
               <div class="promo-image">
-                <UploadImage @imageData="handleUploadImage" />
+                <UploadImage
+                  @imageData="handleUploadImage"
+                  :src="formData.promo_image"
+                  square="true"
+                />
               </div>
               <div class="promo-image-info">
-                {{ image_info.name }}-{{ image_info.size }}
+                <span>{{ image_info.name }}</span>
+                <span>{{ image_info.size }}</span>
               </div>
             </div>
             <div class="product-status">
@@ -128,10 +133,10 @@
             <span class="header-title">商品变体列表</span>
             <q-btn
               size="15px"
-              :class="allSelectedStatus ? 'text-white' : 'text-black'"
+              class="all-selected-btn"
+              :class="allSelectedStatus ? 'checked' : ''"
               unelevated
               @click="allSelected"
-              :color="allSelectedStatus ? 'primary' : 'grey-1'"
               >全选</q-btn
             >
             <q-btn
@@ -207,7 +212,7 @@ import UploadImage from "src/components/Common/UploadImage.vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
 import { isAnyObjectValueEmpty } from "src/utils/utils.js";
-import { deleteData, fetchData } from "src/services/api";
+import { deleteData, fetchData, updateData } from "src/services/api";
 import { ref, computed, reactive, watch, onMounted } from "vue";
 import { showNotif } from "src/utils/utils.js";
 import { Decrypt } from "src/utils/secret";
@@ -418,8 +423,7 @@ const handleUploadImage = (data) => {
 
 // 完成编辑
 const handleSubmitEvent = () => {
-  console.log(formData.value);
-  // updateData("/products/" + formData.value.product_id, formData.value);
+  updateData("/products/" + formData.value.product_id, formData.value);
 };
 
 onMounted(() => {
@@ -493,6 +497,7 @@ onMounted(() => {
     box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03);
     border: 1px solid #f1f1f4;
     box-sizing: border-box;
+    border-radius: 10px;
   }
 
   .left,
@@ -623,11 +628,32 @@ onMounted(() => {
 
 .promo-image-box {
   width: 100%;
-  height: 350px;
+  height: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f1f4;
+  border-radius: 10px;
+
+  .promo-image-title,
+  .promo-image-info {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+  }
+
+  .promo-image {
+    width: 100%;
+    height: 350px;
+  }
+  .promo-image-info {
+    justify-content: space-between;
+  }
 }
 
 .product-status:hover {
@@ -661,6 +687,7 @@ onMounted(() => {
   input {
     outline: none;
     border: 1px solid #dbdfe9;
+    background: transparent;
     height: 45px;
     text-indent: 1em;
     border-radius: 5px;
@@ -708,6 +735,14 @@ onMounted(() => {
 
     // .set-discount-btn {
     // }
+    .all-selected-btn {
+      background: #fafafa;
+      color: #000;
+    }
+    .all-selected-btn.checked {
+      background: var(--primary);
+      color: #fff;
+    }
 
     .delete-btn {
       span {
@@ -790,8 +825,34 @@ onMounted(() => {
 }
 
 .body--dark {
+  $border-color: #444;
+  $input-bg: #2f2f2f;
   .product-status {
-    border: 1px solid #444444;
+    border: 1px solid $border-color;
+  }
+  .right {
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.03);
+    border: 1px solid $border-color;
+  }
+  .promo-image-box {
+    border: 1px solid $border-color;
+  }
+  .product-info-item {
+    input {
+      border: 1px solid $border-color;
+    }
+  }
+  .product-info-item {
+    input {
+      color: #fff;
+    }
+  }
+  .variants-box .header .all-selected-btn {
+    background: #222;
+    color: #fff;
+  }
+  .variants-box .header .checked {
+    background: var(--primary);
   }
 }
 </style>

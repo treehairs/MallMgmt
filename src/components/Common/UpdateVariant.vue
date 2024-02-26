@@ -1,12 +1,12 @@
 <template>
-  <div class="update-variant-container bg-white">
+  <div class="update-variant-container">
     <div class="update-variant-box-title">
       <q-icon name="edit_calendar" /><span>商品变体信息</span>
     </div>
     <form action="" class="variant-info-form" @submit="submit">
       <ul class="variant-info-list">
         <li class="image-box">
-          <UploadImage :src="variantInfo.image" />
+          <UploadImage :src="variantInfo.image" shadow="true" />
         </li>
         <li class="variant-info-item name-box">
           <label for="name">变体名称</label>
@@ -104,7 +104,7 @@
         </li>
         <li class="variant-info-item btn-box">
           <q-btn color="primary" class="btn" @click="submit">提交</q-btn>
-          <q-btn class="btn text-black" @click="emit('cancel')">取消</q-btn>
+          <q-btn class="btn cancel-btn" @click="emit('cancel')">取消</q-btn>
         </li>
       </ul>
     </form>
@@ -148,6 +148,7 @@ const submit = () => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: #fff;
 }
 
 .variant-info-form {
@@ -222,6 +223,7 @@ const submit = () => {
     height: 45px;
     text-indent: 1em;
     border-radius: 5px;
+    background: transparent;
   }
 }
 
@@ -274,6 +276,26 @@ const submit = () => {
 
   100% {
     transform: translateX(0);
+  }
+}
+.body--dark {
+  .update-variant-container {
+    background: rgb(26, 26, 26);
+  }
+  .variant-info-item {
+    input {
+      border: 1px solid #444;
+      color: #fff;
+    }
+  }
+  .cancel-btn {
+    color: #fff;
+  }
+}
+
+.body--light {
+  .cancel-btn {
+    color: #000;
   }
 }
 </style>

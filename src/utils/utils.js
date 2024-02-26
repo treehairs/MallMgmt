@@ -65,3 +65,22 @@ export const showNotif = (type, message, icon) => {
     icon: selectedIcon
   });
 }
+
+/**
+ * 计算文件大小
+ * @param {number} size 文件大小
+ * @return {number}                   文件大小（字节）
+ */
+export function size2Str(size) {
+  if (size < 1024) {
+    return size + 'B';
+  } else if (size >= 1024 && size < Math.pow(1024, 2)) {
+    return parseFloat(size / 1024).toFixed(2) + 'KB';
+  } else if (size >= Math.pow(1024, 2) && size < Math.pow(1024, 3)) {
+    return parseFloat(size / Math.pow(1024, 2)).toFixed(2) + 'MB';
+  } else if (size > Math.pow(1024, 3)) {
+    return parseFloat(size / Math.pow(1024, 3)).toFixed(2) + 'GB';
+  } else {
+    return 0 + 'B';
+  }
+}

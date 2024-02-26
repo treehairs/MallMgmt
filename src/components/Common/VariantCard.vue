@@ -18,7 +18,7 @@
       </div>
     </li>
     <li class="product-image">
-      <img :src="variant.image" alt="" />
+      <img :src="url + variant.image" alt="" />
     </li>
     <li class="product-name">{{ variant.variant_name }}</li>
     <li class="product-price">{{ variant.price }}</li>
@@ -33,9 +33,11 @@
 </template>
 
 <script setup>
+import { url } from "boot/axios";
 const props = defineProps(["variant"]);
 const emit = defineEmits(["deleteVariant", "updateVariant"]);
 const variant = props.variant;
+console.log(variant);
 
 const deleteVariant = (variant_id) => {
   emit("deleteVariant", variant_id);
@@ -223,5 +225,34 @@ const updateVariant = (variant_id) => {
 .product-style {
   margin-top: 5px;
   font-size: 14px;
+}
+
+.body--dark {
+  .card-item {
+    background: rgb(31, 31, 31);
+    $border-color: #333;
+    $border-width: 2px;
+
+    &::before {
+      border-left: $border-width solid $border-color;
+      border-top: $border-width solid $border-color;
+    }
+
+    &::after {
+      border-right: $border-width solid $border-color;
+      border-bottom: $border-width solid $border-color;
+    }
+  }
+  .checked {
+    &::before,
+    &::after {
+      border-color: var(--primary);
+      box-shadow: 0 0 10px #444;
+    }
+
+    .btns div {
+      background: var(--primary);
+    }
+  }
 }
 </style>

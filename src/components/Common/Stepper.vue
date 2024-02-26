@@ -254,4 +254,9 @@ $step-index-width: 25px;
     margin: 0 10px;
   }
 }
+.body--dark {
+  .step-item-inactive {
+    color: #000;
+  }
+}
 </style>
