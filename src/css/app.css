@@ -25,6 +25,9 @@
   --text-grey: #a5a5a5;
   --bg-grey: #f9f9f9;
 
+  --text-yellow: #e4ba00;
+  --bg-yellow: #fffae6;
+
   --deep--text-green: #08a261;
   --deep--bg-green: #1f212a;
 
@@ -36,6 +39,9 @@
 
   --deep--text-grey: #a5a5a5;
   --deep--bg-grey: #f9f9f9;
+
+  --deep--text-yellow: #fdcf04;
+  --deep--bg-yellow: #251f00;
 
   --primary: #6f77fc;
   --secondary: "#E6E9F4";

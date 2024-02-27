@@ -44,8 +44,11 @@
       </template>
       <template v-slot:product_status="{ props }">
         <div
+          class="status"
           :class="
-            props.item.product_status === '在售' ? 'on-sale' : 'out-of-stock'
+            product_status_list.find(
+              (item) => item.status === props.item.product_status
+            ).color
           "
         >
           <span>{{ props.item.product_status }}</span>
@@ -126,6 +129,7 @@ import { deleteData, fetchData } from "src/services/api";
 // import { showNotif } from 'src/utils/utils.js'
 import { Encrypt, Decrypt } from "src/utils/secret";
 import { onMounted, ref } from "vue";
+import { product_status_list } from "src/data/statusColor";
 import { debounce, throttle, useQuasar } from "quasar";
 import { url } from "boot/axios";
 import { useRouter } from "vue-router";
@@ -306,6 +310,9 @@ const dateChange = (date) => {
   }
 };
 
+// 设置状态样色
+const statusColor = ref();
+
 /**
  * 搜索数据
  * @param {string} keyword - 搜索关键字
@@ -438,8 +445,8 @@ onMounted(fetchDataAndSetRows);
     }
   }
 
+  .status,
   .sold-out,
-  .on-sale,
   .out-of-stock {
     span {
       border-radius: 15px;
@@ -447,14 +454,19 @@ onMounted(fetchDataAndSetRows);
     }
   }
 
-  .on-sale span {
+  .green span {
     background: var(--bg-green);
     color: var(--text-green);
   }
 
-  .out-of-stock span {
+  .red span {
     background: var(--bg-grey);
     color: var(--text-grey);
+  }
+
+  .yellow span {
+    background: var(--bg-yellow);
+    color: var(--text-yellow);
   }
 
   .total_stock {
@@ -497,14 +509,19 @@ onMounted(fetchDataAndSetRows);
     }
   }
 
-  .on-sale span {
+  .green span {
     color: var(--deep--text-green);
     background: var(--deep--bg-green);
   }
 
-  .out-of-stock span {
+  .red span {
     color: var(--deep--text-grey);
     background: var(--deep-bg-grey);
+  }
+
+  .yellow span {
+    color: var(--deep--text-yellow);
+    background: var(--deep--bg-yellow);
   }
 
   .total_stock {

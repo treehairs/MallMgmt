@@ -4,42 +4,61 @@
       <div class="btn discount-btn" @click.prevent="">
         <q-icon name="loyalty" />
       </div>
-      <div class="btn update-btn" @click.prevent="updateVariant(variant.variant_id)">
+      <div class="btn update-btn" @click.prevent="UpdateVariantCard = true">
         <q-icon name="edit" />
       </div>
-      <div class="btn delete-btn" @click.prevent="deleteVariant(variant.variant_id)">
+      <div
+        class="btn delete-btn"
+        @click.prevent="deleteVariant(variant.variant_id)"
+      >
         <q-icon name="close" />
       </div>
     </li>
     <li class="product-image">
-      <img :src="url + variant.image" alt="" />
+      <img :src="url + variant.variant_image" alt="" />
     </li>
     <li class="product-name">{{ variant.variant_name }}</li>
     <li class="product-price">{{ variant.price }}</li>
-    <li class="product-inventory">
-      <span class="in-stock" v-if="variant.inventory">{{
-        variant.inventory
+    <li class="product-stock_quantity">
+      <span class="in-stock" v-if="variant.stock_quantity">{{
+        variant.stock_quantity
       }}</span>
       <span class="sold-out" v-else>售罄</span>
     </li>
     <li class="product-style">{{ variant.style }}+{{ variant.specs }}</li>
+    <q-dialog v-model="UpdateVariantCard">
+      <UpdateVariant
+        @submitEvent="updateVariant"
+        @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="variant"
+      />
+    </q-dialog>
   </ul>
 </template>
 
 <script setup>
 import { url } from "boot/axios";
+import { ref } from "vue";
+import UpdateVariant from "src/components/Common/UpdateVariant.vue";
+import { updateData } from "src/services/api";
+import { showNotif } from "src/utils/utils.js";
+
 const props = defineProps(["variant"]);
-const emit = defineEmits(["deleteVariant", "updateVariant"]);
+const emit = defineEmits(["deleteVariant"]);
+const UpdateVariantCard = ref(false);
 const variant = props.variant;
-console.log(variant);
 
 const deleteVariant = (variant_id) => {
   emit("deleteVariant", variant_id);
   variant.checked = true;
 };
-const updateVariant = (variant_id) => {
-  emit("updateVariant", variant_id);
+
+const updateVariant = (variant) => {
+  console.log("点击了");
   variant.checked = true;
+  if (updateData(`/variants/${variant.variant_id}`, variant))
+    showNotif("positive", "修改成功");
+  UpdateVariantCard.value = false;
 };
 </script>
 
@@ -106,7 +125,6 @@ const updateVariant = (variant_id) => {
 }
 
 .checked {
-
   &::before,
   &::after {
     width: 100%;
@@ -148,7 +166,6 @@ const updateVariant = (variant_id) => {
   }
 
   @mixin set-btn-color($color) {
-
     // background: $bg;
     &:hover {
       background: darken($color, $amount: 10%);
@@ -207,7 +224,7 @@ const updateVariant = (variant_id) => {
   }
 }
 
-.product-inventory {
+.product-stock_quantity {
   margin-top: 5px;
   height: 20px;
   font-size: 14px;
@@ -241,7 +258,6 @@ const updateVariant = (variant_id) => {
   }
 
   .checked {
-
     &::before,
     &::after {
       border-color: var(--primary);
