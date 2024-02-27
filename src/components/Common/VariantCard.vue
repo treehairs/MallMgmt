@@ -7,10 +7,7 @@
       <div class="btn update-btn" @click.prevent="UpdateVariantCard = true">
         <q-icon name="edit" />
       </div>
-      <div
-        class="btn delete-btn"
-        @click.prevent="deleteVariant(variant.variant_id)"
-      >
+      <div class="btn delete-btn" @click.prevent="deleteVariant(variant.variant_id)">
         <q-icon name="close" />
       </div>
     </li>
@@ -27,11 +24,7 @@
     </li>
     <li class="product-style">{{ variant.style }}+{{ variant.specs }}</li>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant
-        @submitEvent="updateVariant"
-        @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="variant"
-      />
+      <UpdateVariant @submitEvent="updateVariant" @cancel="UpdateVariantCard = false" :updateVariantInfo="variant" />
     </q-dialog>
   </ul>
 </template>
@@ -54,7 +47,7 @@ const deleteVariant = (variant_id) => {
 };
 
 const updateVariant = (variant) => {
-  console.log("点击了");
+  console.log(variant);
   variant.checked = true;
   if (updateData(`/variants/${variant.variant_id}`, variant))
     showNotif("positive", "修改成功");
@@ -125,6 +118,7 @@ const updateVariant = (variant) => {
 }
 
 .checked {
+
   &::before,
   &::after {
     width: 100%;
@@ -166,6 +160,7 @@ const updateVariant = (variant) => {
   }
 
   @mixin set-btn-color($color) {
+
     // background: $bg;
     &:hover {
       background: darken($color, $amount: 10%);
@@ -258,6 +253,7 @@ const updateVariant = (variant) => {
   }
 
   .checked {
+
     &::before,
     &::after {
       border-color: var(--primary);
