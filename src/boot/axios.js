@@ -22,6 +22,7 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 
   app.config.globalProperties.$url = url
+  // app.provide('test', "这是测试数据")
 })
 
 export { api, url }

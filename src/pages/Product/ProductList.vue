@@ -99,15 +99,15 @@
       /></q-inner-loading>
     </div>
 
-    <Drawer
-      :dialog="dialog"
-      @dialogEventListener="dialog = false"
-      :column="columnName"
-      :rows="originalRows"
-      @selectedColumnsChanged="columnsChanged"
-      @selectedRowsChanged="rowsChanged"
-      @dateChange="dateChange"
-    ></Drawer>
+    <q-dialog position="right" v-model="dialog">
+      <Drawer
+        :column="columnName"
+        :rows="originalRows"
+        @selectedColumnsChanged="columnsChanged"
+        @selectedRowsChanged="rowsChanged"
+        @dateChange="dateChange"
+      ></Drawer>
+    </q-dialog>
 
     <!-- 数据删除提示框 -->
     <q-dialog v-model="deleteEventConfirm">

@@ -84,3 +84,16 @@ export function size2Str(size) {
     return 0 + 'B';
   }
 }
+
+/**
+ * 生成PID
+ * @returns {int}
+ */
+import { customAlphabet } from "nanoid";
+import moment from "moment";
+
+export const generate_pid = () => {
+  const alphabet = "0123456789";
+  const nanoid = customAlphabet(alphabet, 9);
+  return nanoid();
+};

@@ -1,67 +1,56 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <q-dialog
-    v-model="dialog"
-    position="right"
-    @hide="emit('dialogEventListener')"
-  >
-    <q-card class="card">
-      <div class="header"><span>筛选条件</span></div>
-      <div class="container">
-        <ul class="filter-item">
-          <li>
-            <span>列：</span>
-            <SelectInput
-              :data="column"
-              filterConditions="name"
-              @selectedChanged="columnsChanged"
-            />
-          </li>
-          <li>
-            <span>类别：</span>
-            <SelectInput
-              :data="rows"
-              filterConditions="category_name"
-              @selectedChanged="selectedChanged"
-            />
-          </li>
-          <li>
-            <span>状态：</span>
-            <SelectInput
-              :data="rows"
-              filterConditions="product_status"
-              @selectedChanged="selectedChanged"
-            />
-          </li>
-          <li>
-            <span>创建日期：</span>
-            <DatePicker @dateChange="dateChange" />
-          </li>
-        </ul>
-      </div>
-    </q-card>
-  </q-dialog>
+  <q-card class="card">
+    <div class="header"><span>筛选条件</span></div>
+    <div class="container">
+      <ul class="filter-item">
+        <li>
+          <span>列：</span>
+          <SelectInput
+            :data="column"
+            filterConditions="name"
+            @selectedChanged="columnsChanged"
+          />
+        </li>
+        <li>
+          <span>类别：</span>
+          <SelectInput
+            :data="rows"
+            filterConditions="category_name"
+            @selectedChanged="selectedChanged"
+          />
+        </li>
+        <li>
+          <span>状态：</span>
+          <SelectInput
+            :data="rows"
+            filterConditions="product_status"
+            @selectedChanged="selectedChanged"
+          />
+        </li>
+        <li>
+          <span>创建日期：</span>
+          <DatePicker @dateChange="dateChange" />
+        </li>
+      </ul>
+    </div>
+  </q-card>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import DatePicker from "src/components/Common/Form/DatePicker.vue";
 
-const props = defineProps(["dialog", "column", "rows"]);
+const props = defineProps(["column", "rows"]);
 const emit = defineEmits([
   "hideDialog",
   "selectedColumnsChanged",
   "selectedRowsChanged",
   "dateChange",
 ]);
-const dialog = ref(props.dialog);
-const column = ref(props.column);
-const rows = ref(props.rows);
-
-watchEffect(() => {
-  dialog.value = props.dialog;
-});
+const column = props.column;
+const rows = props.rows;
+console.log(rows);
 
 const columnsChanged = (value) => {
   emit("selectedColumnsChanged", value);
