@@ -7,16 +7,9 @@
           <th class="checkbox">
             <Checkbox v-model="selectAll" @change="toggleAll"></Checkbox>
           </th>
-          <th
-            v-for="item in columnName"
-            :key="item.index"
-            @click="!item.unsorted ? sort_data(`${item.class}`) : null"
-            :class="item.class"
-          >
-            <TableHeader
-              :isAscending="isAscending"
-              :unsorted="item.unsorted || false"
-            >
+          <th v-for="item in columnName" :key="item.index" @click="!item.unsorted ? sort_data(`${item.class}`) : null"
+            :class="item.class">
+            <TableHeader :isAscending="isAscending" :unsorted="item.unsorted || false">
               <span>{{ item.name }}</span>
             </TableHeader>
           </th>
@@ -26,11 +19,7 @@
       <tbody>
         <tr v-for="item in paginatedData" :key="item[primaryKeyClass]">
           <td class="checkbox">
-            <Checkbox
-              v-model="item.selected"
-              :id="item[primaryKeyClass]"
-              @change="handleChange(item)"
-            />
+            <Checkbox v-model="item.selected" :id="item[primaryKeyClass]" @change="handleChange(item)" />
           </td>
           <td v-for="rows in columnName" :key="rows.product_id">
             <slot :name="rows.class" :props="{ item }">
@@ -38,13 +27,7 @@
             </slot>
           </td>
           <td class="op-btns">
-            <q-btn-dropdown
-              class="dropdown"
-              unelevated
-              label="操作"
-              transition-show="jump-up"
-              transition-hide="jump-down"
-            >
+            <q-btn-dropdown class="dropdown" unelevated label="操作" transition-show="jump-up" transition-hide="jump-down">
               <q-list class="list">
                 <slot name="op" :props="{ item }"></slot>
               </q-list>
@@ -54,15 +37,9 @@
       </tbody>
     </table>
     <div class="q-pa-lg flex flex-center">
-      <q-pagination
-        v-model="pagination.page"
-        color="primary"
-        :max="pagesNumber"
-        :max-pages="6"
-        boundary-numbers
-      />
+      <q-pagination v-model="pagination.page" color="primary" :max="pagesNumber" :max-pages="6" boundary-numbers />
     </div>
-    <div v-if="!data || !data.length">
+    <div v-if="!data || !data.length" class="empty-box">
       <EmptyBox></EmptyBox>
     </div>
   </div>
@@ -75,15 +52,16 @@ import EmptyBox from "../Common/EmptyBox.vue";
 import TableHeader from "../Common/TableHeader.vue";
 
 const props = defineProps(["rows", "columnName", "closePromptBox"]);
-const data = ref(props.rows);
-const columnName = ref(props.columnName);
+let data = props.rows || [];
+console.log(data);
+const columnName = props.columnName || [];
 
-const primaryKeyColumn = columnName.value.find(
+const primaryKeyColumn = columnName.find(
   (column) => column.primary_key === true
 );
 const primaryKeyClass = primaryKeyColumn.class;
 
-const closePromptBox = ref(props.closePromptBox);
+const closePromptBox = props.closePromptBox;
 const selectAll = ref(false);
 const deleteItemConfirm = ref(false);
 const emit = defineEmits(["checkboxChangeInTable", "closePromptBox"]);
@@ -96,7 +74,7 @@ watch(
   (newVal, oldVal) => {
     // console.log("columnName 在 Drawer 中发生变化:", newVal);
     // 更新任何本地数据或触发必要的操作
-    columnName.value = newVal;
+    columnName = newVal;
   }
 );
 watch(
@@ -104,7 +82,7 @@ watch(
   (newVal, oldVal) => {
     // console.log("rows 在 Drawer 中发生变化:");
     // 更新任何本地数据或触发必要的操作
-    data.value = newVal;
+    data = newVal;
   }
 );
 watch(
@@ -121,20 +99,20 @@ const pagination = ref({
   sortBy: "desc",
   descending: false,
   page: 1, // 从第一页开始
-  rowsPerPage: 10, // 设置每页的行数
+  rowsPerPage: 6, // 设置每页的行数
 });
 
 // 分页操作
-if (data.value) {
+if (data) {
   pagesNumber = computed(() =>
-    Math.ceil(data.value.length / pagination.value.rowsPerPage)
+    Math.ceil(data.length / pagination.value.rowsPerPage)
   );
 
   paginatedData = computed(() => {
     const startIndex =
       (pagination.value.page - 1) * pagination.value.rowsPerPage;
     const endIndex = startIndex + pagination.value.rowsPerPage;
-    return data.value.slice(startIndex, endIndex);
+    return data.slice(startIndex, endIndex);
   });
 }
 
@@ -147,7 +125,7 @@ watch(selectAll, (newVal, oldVal) => {
 // 全选按钮
 const toggleAll = () => {
   selectAll.value = !selectAll.value;
-  data.value.forEach((item) => {
+  data.forEach((item) => {
     item.selected = selectAll.value;
   });
   selectedArr = selectAll.value
@@ -189,7 +167,7 @@ const sortOrders = {
 let isAscending = true;
 
 const sort_data = (columnName) => {
-  data.value.sort((a, b) => {
+  data.sort((a, b) => {
     const columnA = a[columnName];
     const columnB = b[columnName];
 
@@ -213,6 +191,10 @@ const sort_data = (columnName) => {
 @import url("https://fonts.googleapis.com/css2?family=Merriweather&family=Noto+Sans+SC&display=swap");
 
 .container {
+  overflow-x: auto;
+  box-sizing: border-box;
+  /* 添加这一行使得表格水平滚动 */
+
   table {
     width: 100%;
     min-width: 1000px;
@@ -226,6 +208,7 @@ const sort_data = (columnName) => {
 
     th,
     td {
+      min-width: 150px;
       border: none;
       border-bottom: 1px dashed #f1f1f4;
       padding: 17px 10px;
@@ -238,6 +221,50 @@ const sort_data = (columnName) => {
         min-width: 30px;
       }
     }
+
+    // /* 确保第一列和第二列固定 */
+    // th:first-child,
+    // td:first-child,
+    // th:nth-child(2),
+    // td:nth-child(2) {
+    //   position: sticky;
+    //   z-index: 1;
+    //   background-color: white;
+    //   /* 为了避免被其他列覆盖，添加白色背景 */
+    // }
+
+    // /* 修复第一列和第二列的样式 */
+    // th:first-child,
+    // td:first-child {
+    //   min-width: 80px;
+    //   left: 0;
+    //   /* 调整第一列宽度以适应内容 */
+    // }
+
+    // th:nth-child(2),
+    // td:nth-child(2) {
+    //   min-width: 150px;
+    //   left: 80px;
+    //   /* 调整第二列宽度以适应内容 */
+    // }
+
+    // /* 确保表头和第一列、第二列对齐 */
+    // .table-header th:first-child,
+    // tbody tr td:first-child,
+    // .table-header th:nth-child(2),
+    // tbody tr td:nth-child(2) {
+    //   z-index: 2;
+    // }
+
+    // .table-header th:first-child,
+    // tbody tr td:first-child {
+    //   left: 0;
+    // }
+
+    // .table-header th:nth-child(2),
+    // tbody tr td:nth-child(2) {
+    //   left: 80px;
+    // }
 
     th {
       color: #99a1b7;
@@ -274,8 +301,13 @@ const sort_data = (columnName) => {
   color: #848ba3;
 }
 
+.empty-box {
+  margin-bottom: 100px;
+}
+
 .body--dark {
   table {
+
     th,
     td {
       border-bottom: 1px dashed #26272f;

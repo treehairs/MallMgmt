@@ -52,7 +52,7 @@ export default [
       {
         link: 'category',
         label: '类别列表',
-        to: '/category'
+        // to: '/category'
       },
       {
         link: 'add_shopping_cart',
@@ -76,7 +76,8 @@ export default [
     item: [
       {
         link: 'topic',
-        label: '待完成订单'
+        label: '总订单',
+        to: '/order',
       },
       {
         link: 'feedback',

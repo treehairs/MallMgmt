@@ -43,10 +43,16 @@ const routes = [
         ]
       },
       {
-        path: 'category',
-        component: () => import('pages/Category/CategoryList.vue'),
-        meta: { title: '类别列表', icon: 'category', module: '商品管理', module_icon: 'shopping_cart' },
-      }
+        path: 'order',
+        component: () => import('pages/OrderPage.vue'),
+        children: [
+          {
+            path: '',
+            component: () => import('pages/Order/OrderList.vue'),
+            meta: { title: '订单列表', icon: 'topic', module: '订单管理', module_icon: 'vertical_split' },
+          }
+        ]
+      },
 
     ]
   },
