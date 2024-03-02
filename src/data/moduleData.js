@@ -6,17 +6,9 @@ export default [
     item: [
       {
         link: 'financial',
-        label: '收支记录',
+        label: '数据统计',
         to: '/financial'
       },
-      {
-        link: 'outbox',
-        label: 'outbox'
-      },
-      {
-        link: 'trash',
-        label: 'Trash'
-      }
     ]
   },
   {

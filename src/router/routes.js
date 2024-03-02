@@ -3,11 +3,16 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
+      {
+        path: '',
+        component: () => import('pages/Equalizer/FinancialPage.vue'),
+        meta: { title: '数据统计', icon: 'attach_money', module: '统计功能', module_icon: 'equalizer' },
+      },
       { path: 'IndexPage', meta: { title: '首页', icon: 'home' }, component: () => import('pages/IndexPage.vue') },
       {
         path: 'financial',
         component: () => import('pages/Equalizer/FinancialPage.vue'),
-        meta: { title: '收支明细', icon: 'attach_money', module: '统计功能', module_icon: 'equalizer' },
+        meta: { title: '数据统计', icon: 'attach_money', module: '统计功能', module_icon: 'equalizer' },
         children: [
           {
             path: 'abc',
