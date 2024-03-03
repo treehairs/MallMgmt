@@ -11,7 +11,7 @@ import { api } from 'boot/axios'
 export const fetchData = async path => {
   try {
     const result = await api.get(path);
-    console.log(result);
+    // console.log(result);
     return result.data;
   } catch (error) {
     console.error('Error fetching data:', error);

@@ -5,35 +5,35 @@
         <li class="border">
           <div class="icon"><q-icon name="sentiment_satisfied" /></div>
           <div class="info">
-            <span class="data">123</span>
+            <span class="data">{{ statistics.today_sales }}</span>
             <span class="text">本日销售额</span>
           </div>
         </li>
         <li class="border">
           <div class="icon"><q-icon name="attach_money" /></div>
           <div class="info">
-            <span class="data">123</span>
+            <span class="data">{{ statistics.total_sales }}</span>
             <span class="text">总销售额</span>
           </div>
         </li>
         <li class="border">
           <div class="icon"><q-icon name="date_range" /></div>
           <div class="info">
-            <span class="data">123</span>
+            <span class="data">{{ statistics.total_orders }}</span>
             <span class="text">总订单量</span>
           </div>
         </li>
         <li class="border">
           <div class="icon"><q-icon name="shopping_bag" /></div>
           <div class="info">
-            <span class="data">123</span>
+            <span class="data">{{ statistics.total_products }}</span>
             <span class="text">总商品量</span>
           </div>
         </li>
         <li class="border">
           <div class="icon"><q-icon name="perm_identity" /></div>
           <div class="info">
-            <span class="data">123</span>
+            <span class="data">{{ statistics.total_users }}</span>
             <span class="text">总用户量</span>
           </div>
         </li>
@@ -49,63 +49,114 @@
 
 <script setup>
 import * as echarts from "echarts";
-import { onMounted } from "vue";
+import { fetchData } from "src/services/api";
+import { onMounted, ref } from "vue";
 
 /// 声明定义一下echart
 let echart = echarts;
+const statistics = ref({
+  today_sales: 0,
+  total_sales: 0,
+  total_orders: 0,
+  total_products: 0,
+  total_users: 0
+})
 
 // 基础配置一下Echarts
-function initChart() {
-  let chart = echart.init(document.getElementById("sales_revenue"));
-  // 把配置和数据放这里
-  chart.setOption({
-    xAxis: {
-      type: "category",
-      data: [
-        "一月",
-        "二月",
-        "三月",
-        "四月",
-        "五月",
-        "六月",
-        "七月",
-        "八月",
-        "九月",
-        "十月",
-        "十一月",
-        "十二月"
-      ]
-    },
-    tooltip: {
-      trigger: "axis"
-    },
-    yAxis: {
-      type: "value"
-    },
-    series: [
-      {
-        data: [
-          820,
-          932,
-          901,
-          934,
-          1290,
-          1330,
-          1320,
-          801,
-          102,
-          230,
-          4321,
-          4129
-        ],
-        type: "line",
-        smooth: true
-      }
-    ]
-  });
+// const initChart = () => {
+//   let chart = echart.init(document.getElementById("sales_revenue"));
+//   let data = total_sales()
+//   // 把配置和数据放这里
+//   chart.setOption({
+//     xAxis: {
+//       type: "category",
+//       data: [
+//         "一月",
+//         "二月",
+//         "三月",
+//         "四月",
+//         "五月",
+//         "六月",
+//         "七月",
+//         "八月",
+//         "九月",
+//         "十月",
+//         "十一月",
+//         "十二月"
+//       ]
+//     },
+//     tooltip: {
+//       trigger: "axis"
+//     },
+//     yAxis: {
+//       type: "value"
+//     },
+//     series: [
+//       {
+//         data,
+//         type: "line",
+//         smooth: true
+//       }
+//     ]
+//   });
+// }
+
+const get_statistics = () => {
+  fetchData('/statistics')
+    .then(result => {
+      statistics.value = result[0]
+    })
+    .catch(err => {
+      console.log(err);
+    })
 }
 
-onMounted(initChart)
+const total_sales = () => {
+  fetchData('/total_sales')
+    .then(result => {
+      let chart = echart.init(document.getElementById("sales_revenue"));
+      let data = result.map(item => item.monthly_revenue)
+      // 把配置和数据放这里
+      chart.setOption({
+        xAxis: {
+          type: "category",
+          data: [
+            "一月",
+            "二月",
+            "三月",
+            "四月",
+            "五月",
+            "六月",
+            "七月",
+            "八月",
+            "九月",
+            "十月",
+            "十一月",
+            "十二月"
+          ]
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        yAxis: {
+          type: "value"
+        },
+        series: [
+          {
+            data,
+            type: "line",
+            smooth: true
+          }
+        ]
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return false
+    })
+}
+
+onMounted(() => { get_statistics(); total_sales() })
 </script>
 
 <style scoped lang="scss">

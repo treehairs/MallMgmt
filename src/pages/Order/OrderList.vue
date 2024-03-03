@@ -28,6 +28,7 @@ import { deleteData, fetchData } from "src/services/api";
 import { Encrypt, Decrypt } from "src/utils/secret";
 import { debounce, throttle, useQuasar } from "quasar";
 import { useRouter } from "vue-router";
+import moment from "moment";
 
 const rows = ref([])
 const originalRows = ref([])
@@ -47,6 +48,11 @@ const columnName = ref(orderTableFields)
 const fetchDataAndSetRows = async () => {
   try {
     const data = await fetchData("/orders");
+    data.data.map((item) => {
+      item.create_time = moment(item.create_time).format("YYYY-MM-DD HH:mm:ss");
+      item.payment_time = moment(item.payment_time).format("YYYY-MM-DD HH:mm:ss");
+      item.modify_time = moment(item.modify_time).format("YYYY-MM-DD HH:mm:ss");
+    });
     originalRows.value = data.data;
     rows.value = [...originalRows.value];
   } catch (error) {
