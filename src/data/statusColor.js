@@ -12,3 +12,19 @@ export const product_status_list = [
     color: "yellow",
   },
 ];
+
+export const request_method = [
+  {
+    status: "GET",
+    color: "green",
+  },
+  {
+    status: "POST",
+    color: "blue",
+  },
+  {
+    status: "DELETE",
+    color: "red",
+  }
+];
+

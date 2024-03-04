@@ -58,6 +58,17 @@ const routes = [
           }
         ]
       },
+      {
+        path: 'log',
+        component: () => import('pages/LogPage.vue'),
+        children: [
+          {
+            path: '',
+            component: () => import('pages/Log/LogList.vue'),
+            meta: { title: '日志列表', icon: 'description', module: '日志管理', module_icon: 'perm_identity' },
+          }
+        ]
+      },
 
     ]
   },

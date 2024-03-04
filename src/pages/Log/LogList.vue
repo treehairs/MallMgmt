@@ -15,17 +15,27 @@
     </q-btn>
   </div>
   <Table :rows="rows" :columnName="columnName" v-if="ready" :closePromptBox="closePromptBox"
-    @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false"></Table>
+    @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false">
+    <template v-slot:request_method="{ props }">
+      <div class="status" :class="request_method.find(
+      (item) => item.status === props.item.request_method
+    ).color
+      ">
+        <span>{{ props.item.request_method }}</span>
+      </div>
+    </template>
+  </Table>
 </template>
 
 <script setup>
 import Table from "src/components/List/Table.vue";
 import InputField from "src/components/Common/InputField.vue";
-import { orderTableFields } from "src/data/columnName"
+import { logTableFields } from "src/data/columnName"
 import { onMounted, ref } from "vue";
 import { deleteData, fetchData } from "src/services/api";
 // import { showNotif } from 'src/utils/utils.js'
 import { Encrypt, Decrypt } from "src/utils/secret";
+import { request_method } from "src/data/statusColor";
 import { debounce, throttle, useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import moment from "moment";
@@ -42,16 +52,14 @@ const selectedArr = ref([]);
 const deleteEventConfirm = ref(false);
 const closePromptBox = ref(false);
 const tempID = ref(null);
-const columnName = ref(orderTableFields)
+const columnName = ref(logTableFields)
 
 // 获取数据
 const fetchDataAndSetRows = async () => {
   try {
-    const data = await fetchData("/orders");
+    const data = await fetchData("/logs");
     data.data.map((item) => {
-      item.created_at = moment(item.created_at).format("YYYY-MM-DD HH:mm:ss");
-      // item.payment_time = moment(item.payment_time).format("YYYY-MM-DD HH:mm:ss");
-      // item.modify_time = moment(item.modify_time).format("YYYY-MM-DD HH:mm:ss");
+      item.create_time = moment(item.create_time).format("YYYY-MM-DD HH:mm:ss");
     });
     originalRows.value = data.data;
     rows.value = [...originalRows.value];
@@ -132,49 +140,6 @@ const rowsChanged = (data, filterConditions) => {
       data.some((ele) => item[filterConditions] === ele)
     )
     : originalRows.value;
-};
-
-/**
- * 筛选日期
- * @param {*} date - 日期，可以是对象、空值、字符串
- */
-const dateChange = (date) => {
-  // 日期被选中
-  if (date !== null) {
-    // 范围日期
-    if (date.from) {
-      rows.value = originalRows.value.filter((item) => {
-        const from = new Date(date.from);
-        const to = new Date(date.to);
-        const created_at = new Date(item.created_at.replace("-", "/"));
-        if (
-          Math.round(from) <= Math.round(created_at) &&
-          Math.round(to) >= Math.round(created_at)
-        ) {
-          return item;
-        }
-      });
-    }
-    // 选项框数据被删除
-    else if (date === "") {
-      rows.value = originalRows.value;
-    }
-    // 单个日期
-    else {
-      rows.value = originalRows.value.filter((item) => {
-        if (
-          Math.round(new Date(date)) ===
-          Math.round(new Date(item.created_at.replace("-", "/")))
-        ) {
-          return item;
-        }
-      });
-    }
-  }
-  // 日期未选择
-  else {
-    rows.value = originalRows.value;
-  }
 };
 
 /**
@@ -275,5 +240,28 @@ onMounted(fetchDataAndSetRows)
       transform: rotate(360deg);
     }
   }
+}
+
+.status {
+  span {
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-weight: bold;
+  }
+}
+
+.green span {
+  background: var(--bg-green);
+  color: var(--text-green);
+}
+
+.red span {
+  background: var(--bg-grey);
+  color: var(--text-grey);
+}
+
+.blue span {
+  background: var(--bg-blue);
+  color: var(--text-blue);
 }
 </style>
