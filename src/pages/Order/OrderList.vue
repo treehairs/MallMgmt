@@ -5,44 +5,40 @@
       <span v-if="refreshed">更新</span>
       <q-icon v-else name="refresh" class="header-icon refreshing"></q-icon>
     </q-btn>
-    <q-btn class="header-btn filter-btn" unelevated @click="dialog = true">
+    <!-- <q-btn class="header-btn filter-btn" unelevated @click="dialog = true">
       <q-icon name="tune" class="header-icon"></q-icon>
       筛选
     </q-btn>
     <q-btn class="header-btn delete-btn" color="negative" unelevated :disable="deleteDisabled" @click="deleteItems">
       <q-icon name="delete_sweep" class="header-icon"></q-icon>
       删除
-    </q-btn>
+    </q-btn> -->
   </div>
-  <Table :rows="rows" :columnName="columnName" v-if="ready" :closePromptBox="closePromptBox"
-    @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false"></Table>
+  <Table
+    :rows="rows"
+    :columnName="columnName"
+    v-if="ready"
+    :closePromptBox="closePromptBox"
+    @closePromptBox="closePromptBox = false"
+  ></Table>
 </template>
 
 <script setup>
 import Table from "src/components/List/Table.vue";
 import InputField from "src/components/Common/InputField.vue";
-import { orderTableFields } from "src/data/columnName"
+import { orderTableFields } from "src/data/columnName";
 import { onMounted, ref } from "vue";
 import { deleteData, fetchData } from "src/services/api";
-// import { showNotif } from 'src/utils/utils.js'
-import { Encrypt, Decrypt } from "src/utils/secret";
 import { debounce, throttle, useQuasar } from "quasar";
-import { useRouter } from "vue-router";
 import moment from "moment";
 
-const rows = ref([])
-const originalRows = ref([])
-const ready = ref(false)
-const refreshed = ref(true)
+const rows = ref([]);
+const originalRows = ref([]);
+const ready = ref(false);
+const refreshed = ref(true);
 const $q = useQuasar();
-const router = useRouter();
-const dialog = ref(false);
-const deleteDisabled = ref(true);
-const selectedArr = ref([]);
-const deleteEventConfirm = ref(false);
 const closePromptBox = ref(false);
-const tempID = ref(null);
-const columnName = ref(orderTableFields)
+const columnName = ref(orderTableFields);
 
 // 获取数据
 const fetchDataAndSetRows = async () => {
@@ -84,100 +80,6 @@ const updateTable = async () => {
 };
 
 /**
- * 删除数据
- */
-const deleteDataEvent = async (data) => {
-  const result = await deleteData("/products", data);
-  if (result) {
-    fetchDataAndSetRows();
-    showNotif("positive", "成功删除");
-  } else {
-    showNotif("warning", "删除失败");
-  }
-  deleteEventConfirm.value = false;
-  closePromptBox.value = true;
-};
-
-/**
- * 选项框状态监听
- * @param {Array} arr - 被选中数据
- */
-const checkboxChange = (arr) => {
-  // 设置删除按钮状态
-  deleteDisabled.value = arr.length ? false : true;
-  selectedArr.value = arr;
-};
-
-// 创建数据副本用于筛选
-const originalColumnNameValue = [...columnName.value];
-
-/**
- * 监听子组件列名过滤
- * @param {Array} columns - 选中的列名
- */
-const columnsChanged = (columns) => {
-  columnName.value = originalColumnNameValue.filter(
-    (item) => !columns.some((ele) => item.name === ele)
-  );
-};
-
-/**
- * 监听数据字段过滤
- * @param {Array} data         - 选中的类别
- * @param {string} filterConditions - 需要筛选的字段
- */
-const rowsChanged = (data, filterConditions) => {
-  rows.value = data.length
-    ? originalRows.value.filter((item) =>
-      data.some((ele) => item[filterConditions] === ele)
-    )
-    : originalRows.value;
-};
-
-/**
- * 筛选日期
- * @param {*} date - 日期，可以是对象、空值、字符串
- */
-const dateChange = (date) => {
-  // 日期被选中
-  if (date !== null) {
-    // 范围日期
-    if (date.from) {
-      rows.value = originalRows.value.filter((item) => {
-        const from = new Date(date.from);
-        const to = new Date(date.to);
-        const created_at = new Date(item.created_at.replace("-", "/"));
-        if (
-          Math.round(from) <= Math.round(created_at) &&
-          Math.round(to) >= Math.round(created_at)
-        ) {
-          return item;
-        }
-      });
-    }
-    // 选项框数据被删除
-    else if (date === "") {
-      rows.value = originalRows.value;
-    }
-    // 单个日期
-    else {
-      rows.value = originalRows.value.filter((item) => {
-        if (
-          Math.round(new Date(date)) ===
-          Math.round(new Date(item.created_at.replace("-", "/")))
-        ) {
-          return item;
-        }
-      });
-    }
-  }
-  // 日期未选择
-  else {
-    rows.value = originalRows.value;
-  }
-};
-
-/**
  * 搜索数据
  * @param {string} keyword - 搜索关键字
  */
@@ -185,40 +87,11 @@ const searchEvent = (keyword) => {
   if (keyword === "") {
     rows.value = originalRows.value;
   } else {
-    rows.value = originalRows.value.filter((item) =>
-      item.product_name.includes(keyword)
-    );
+    rows.value = originalRows.value.filter((item) => {
+      let id = String(item.order_id);
+      return id.includes(keyword);
+    });
   }
-};
-
-/**
- * 删除多条数据
- */
-const deleteItems = () => {
-  deleteEventConfirm.value = true;
-  tempID.value = null;
-};
-
-/**
- * 删除单条数据
- * @param {string} id
- */
-const deleteItem = (id) => {
-  deleteEventConfirm.value = true;
-  tempID.value = id;
-};
-
-const deleteEvent = () => {
-  if (tempID.value === null) {
-    deleteDataEvent(selectedArr.value);
-  } else {
-    deleteDataEvent([tempID.value]);
-  }
-};
-
-const handleEdit = (item) => {
-  const ciphertext = Encrypt(item); //加密商品数据
-  router.push(`/product/edit/${item.product_id}?p=${ciphertext}`);
 };
 
 /**
@@ -234,7 +107,7 @@ const showNotif = (type, message) => {
     position: "top",
   });
 };
-onMounted(fetchDataAndSetRows)
+onMounted(fetchDataAndSetRows);
 </script>
 
 <style scoped lang="scss">

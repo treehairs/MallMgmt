@@ -9,7 +9,12 @@
       <q-header elevated class="header">
         <q-toolbar>
           <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
-          <q-toggle v-model="visible" @click="$q.dark.toggle()"></q-toggle>
+          <div class="avatar">
+            <img
+              src="/images/products/Ragdolls/可爱柴犬布偶/可爱柴犬布偶.png"
+              alt=""
+            />
+          </div>
         </q-toolbar>
       </q-header>
 
@@ -48,6 +53,23 @@
               </div>
             </q-expansion-item>
           </q-list>
+          <div class="bottom">
+            <div class="change">
+              <span>切换模式</span>
+              <div>
+                <q-toggle
+                  v-model="visible"
+                  @click="$q.dark.toggle()"
+                ></q-toggle>
+              </div>
+            </div>
+            <div class="log-out">
+              <span>退出登录</span>
+              <div class="log-out-icon">
+                <q-icon name="logout"></q-icon>
+              </div>
+            </div>
+          </div>
         </q-scroll-area>
       </q-drawer>
 
@@ -136,5 +158,54 @@ $dark-color: #1d1d1d;
 .toolbar {
   height: 50px;
   text-align: center;
+}
+
+.bottom {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+  flex-direction: column;
+  padding: 0 15px;
+
+  & > div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    font-family: "title";
+    color: #757575;
+  }
+
+  .log-out {
+    cursor: pointer;
+    transition: 0.2s;
+    color: #630f0f;
+    &:hover {
+      color: #535be9;
+    }
+  }
+
+  .log-out-icon {
+    width: 20px;
+    font-size: 25px;
+    margin-right: 20px;
+  }
+}
+.avatar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 20px;
+  border-radius: 6px;
+  img {
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+  }
 }
 </style>

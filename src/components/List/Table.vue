@@ -7,9 +7,16 @@
           <th class="checkbox">
             <Checkbox v-model="selectAll" @change="toggleAll"></Checkbox>
           </th>
-          <th v-for="item in columnName" :key="item.index" @click="!item.unsorted ? sort_data(`${item.class}`) : null"
-            :class="item.class">
-            <TableHeader :isAscending="isAscending" :unsorted="item.unsorted || false">
+          <th
+            v-for="item in columnName"
+            :key="item.index"
+            @click="!item.unsorted ? sort_data(`${item.class}`) : null"
+            :class="item.class"
+          >
+            <TableHeader
+              :isAscending="isAscending"
+              :unsorted="item.unsorted || false"
+            >
               <span>{{ item.name }}</span>
             </TableHeader>
           </th>
@@ -19,7 +26,11 @@
       <tbody>
         <tr v-for="item in paginatedData" :key="item[primaryKeyClass]">
           <td class="checkbox">
-            <Checkbox v-model="item.selected" :id="item[primaryKeyClass]" @change="handleChange(item)" />
+            <Checkbox
+              v-model="item.selected"
+              :id="item[primaryKeyClass]"
+              @change="handleChange(item)"
+            />
           </td>
           <td v-for="rows in columnName" :key="rows.product_id">
             <slot :name="rows.class" :props="{ item }">
@@ -27,7 +38,13 @@
             </slot>
           </td>
           <td class="op-btns">
-            <q-btn-dropdown class="dropdown" unelevated label="操作" transition-show="jump-up" transition-hide="jump-down">
+            <q-btn-dropdown
+              class="dropdown"
+              unelevated
+              label="操作"
+              transition-show="jump-up"
+              transition-hide="jump-down"
+            >
               <q-list class="list">
                 <slot name="op" :props="{ item }"></slot>
               </q-list>
@@ -37,7 +54,13 @@
       </tbody>
     </table>
     <div class="q-pa-lg flex flex-center">
-      <q-pagination v-model="pagination.page" color="primary" :max="pagesNumber" :max-pages="6" boundary-numbers />
+      <q-pagination
+        v-model="pagination.page"
+        color="primary"
+        :max="pagesNumber"
+        :max-pages="6"
+        boundary-numbers
+      />
     </div>
     <div v-if="!data || !data.length" class="empty-box">
       <EmptyBox></EmptyBox>
@@ -53,8 +76,7 @@ import TableHeader from "../Common/TableHeader.vue";
 
 const props = defineProps(["rows", "columnName", "closePromptBox"]);
 let data = props.rows || [];
-console.log(data);
-const columnName = props.columnName || [];
+let columnName = props.columnName || [];
 
 const primaryKeyColumn = columnName.find(
   (column) => column.primary_key === true
@@ -72,7 +94,7 @@ let pagesNumber,
 watch(
   () => props.columnName,
   (newVal, oldVal) => {
-    // console.log("columnName 在 Drawer 中发生变化:", newVal);
+    console.log("columnName 在 Drawer 中发生变化:", newVal);
     // 更新任何本地数据或触发必要的操作
     columnName = newVal;
   }
@@ -80,9 +102,10 @@ watch(
 watch(
   () => props.rows,
   (newVal, oldVal) => {
-    // console.log("rows 在 Drawer 中发生变化:");
+    console.log("rows 在 Drawer 中发生变化:");
     // 更新任何本地数据或触发必要的操作
     data = newVal;
+    paginatedData = data;
   }
 );
 watch(
@@ -307,7 +330,6 @@ const sort_data = (columnName) => {
 
 .body--dark {
   table {
-
     th,
     td {
       border-bottom: 1px dashed #26272f;

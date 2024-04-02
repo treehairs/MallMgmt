@@ -10,25 +10,47 @@
         <q-icon name="tune" class="header-icon"></q-icon>
         筛选
       </q-btn>
-      <q-btn class="header-btn delete-btn" color="negative" unelevated :disable="deleteDisabled" @click="deleteItems">
+      <q-btn
+        class="header-btn delete-btn"
+        color="negative"
+        unelevated
+        :disable="deleteDisabled"
+        @click="deleteItems"
+      >
         <q-icon name="delete_sweep" class="header-icon"></q-icon>
         删除
       </q-btn>
     </div>
 
-    <Table :rows="rows" :columnName="columnName" :closePromptBox="closePromptBox" v-if="productsReady"
-      @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false">
+    <Table
+      :rows="rows"
+      :columnName="columnName"
+      :closePromptBox="closePromptBox"
+      v-if="productsReady"
+      @checkboxChangeInTable="checkboxChange"
+      @deleteEvent="deleteItem"
+      @closePromptBox="closePromptBox = false"
+    >
       <template v-slot:product="{ props }">
         <div class="product">
-          <q-img :src="url + props.item.promo_image" :ratio="1" width="50px" class="promo-image" />
+          <q-img
+            :src="url + props.item.promo_image"
+            :ratio="1"
+            width="50px"
+            class="promo-image"
+          />
           <span class="product_name">{{ props.item.product_name }}</span>
         </div>
       </template>
       <template v-slot:product_status="{ props }">
-        <div class="status" :class="product_status_list.find(
-          (item) => item.status === props.item.product_status
-        ).color
-          ">
+        <div
+          class="status"
+          :class="
+            product_status_list.find(
+              (item) => item.status === props.item.product_status
+            ).color
+          "
+        >
           <span>{{ props.item.product_status }}</span>
         </div>
       </template>
@@ -59,7 +81,11 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-close-popup @click="deleteItem(props.item.product_id)">
+        <q-item
+          clickable
+          v-close-popup
+          @click="deleteItem(props.item.product_id)"
+        >
           <q-item-section class="section">
             <q-item-label>删除</q-item-label>
           </q-item-section>
@@ -68,17 +94,27 @@
     </Table>
 
     <div v-else class="relative-position loading">
-      <q-inner-loading showing><q-spinner-facebook color="primary" size="30px" /></q-inner-loading>
+      <q-inner-loading showing
+        ><q-spinner-facebook color="primary" size="30px"
+      /></q-inner-loading>
     </div>
 
     <q-dialog position="right" v-model="dialog">
-      <Drawer :column="columnName" :rows="originalRows" @selectedColumnsChanged="columnsChanged"
-        @selectedRowsChanged="rowsChanged" @dateChange="dateChange"></Drawer>
+      <Drawer
+        :column="columnName"
+        :rows="originalRows"
+        @selectedColumnsChanged="columnsChanged"
+        @selectedRowsChanged="rowsChanged"
+        @dateChange="dateChange"
+      ></Drawer>
     </q-dialog>
 
     <!-- 数据删除提示框 -->
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox @deleteEvent="deleteEvent" @cancel="deleteEventConfirm = false"></PromptBox>
+      <PromptBox
+        @deleteEvent="deleteEvent"
+        @cancel="deleteEventConfirm = false"
+      ></PromptBox>
     </q-dialog>
   </div>
   <router-view></router-view>
@@ -226,8 +262,8 @@ const columnsChanged = (columns) => {
 const rowsChanged = (data, filterConditions) => {
   rows.value = data.length
     ? originalRows.value.filter((item) =>
-      data.some((ele) => item[filterConditions] === ele)
-    )
+        data.some((ele) => item[filterConditions] === ele)
+      )
     : originalRows.value;
 };
 
@@ -289,6 +325,7 @@ const searchEvent = (keyword) => {
       item.product_name.includes(keyword)
     );
   }
+  console.log(rows.value);
 };
 
 /**
@@ -452,7 +489,6 @@ onMounted(fetchDataAndSetRows);
 }
 
 .body--light {
-
   .filter-btn,
   .refresh-btn {
     color: #000;
@@ -461,7 +497,6 @@ onMounted(fetchDataAndSetRows);
 }
 
 .body--dark {
-
   .filter-btn,
   .refresh-btn {
     background: #272727;

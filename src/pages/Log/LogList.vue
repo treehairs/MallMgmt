@@ -9,18 +9,35 @@
       <q-icon name="tune" class="header-icon"></q-icon>
       筛选
     </q-btn>
-    <q-btn class="header-btn delete-btn" color="negative" unelevated :disable="deleteDisabled" @click="deleteItems">
+    <q-btn
+      class="header-btn delete-btn"
+      color="negative"
+      unelevated
+      :disable="deleteDisabled"
+      @click="deleteItems"
+    >
       <q-icon name="delete_sweep" class="header-icon"></q-icon>
       删除
     </q-btn>
   </div>
-  <Table :rows="rows" :columnName="columnName" v-if="ready" :closePromptBox="closePromptBox"
-    @checkboxChangeInTable="checkboxChange" @deleteEvent="deleteItem" @closePromptBox="closePromptBox = false">
+  <Table
+    :rows="rows"
+    :columnName="columnName"
+    v-if="ready"
+    :closePromptBox="closePromptBox"
+    @checkboxChangeInTable="checkboxChange"
+    @deleteEvent="deleteItem"
+    @closePromptBox="closePromptBox = false"
+  >
     <template v-slot:request_method="{ props }">
-      <div class="status" :class="request_method.find(
-      (item) => item.status === props.item.request_method
-    ).color
-      ">
+      <div
+        class="status"
+        :class="
+          request_method.find(
+            (item) => item.status === props.item.request_method
+          ).color
+        "
+      >
         <span>{{ props.item.request_method }}</span>
       </div>
     </template>
@@ -30,7 +47,7 @@
 <script setup>
 import Table from "src/components/List/Table.vue";
 import InputField from "src/components/Common/InputField.vue";
-import { logTableFields } from "src/data/columnName"
+import { logTableFields } from "src/data/columnName";
 import { onMounted, ref } from "vue";
 import { deleteData, fetchData } from "src/services/api";
 // import { showNotif } from 'src/utils/utils.js'
@@ -40,10 +57,10 @@ import { debounce, throttle, useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import moment from "moment";
 
-const rows = ref([])
-const originalRows = ref([])
-const ready = ref(false)
-const refreshed = ref(true)
+const rows = ref([]);
+const originalRows = ref([]);
+const ready = ref(false);
+const refreshed = ref(true);
 const $q = useQuasar();
 const router = useRouter();
 const dialog = ref(false);
@@ -52,7 +69,7 @@ const selectedArr = ref([]);
 const deleteEventConfirm = ref(false);
 const closePromptBox = ref(false);
 const tempID = ref(null);
-const columnName = ref(logTableFields)
+const columnName = ref(logTableFields);
 
 // 获取数据
 const fetchDataAndSetRows = async () => {
@@ -137,8 +154,8 @@ const columnsChanged = (columns) => {
 const rowsChanged = (data, filterConditions) => {
   rows.value = data.length
     ? originalRows.value.filter((item) =>
-      data.some((ele) => item[filterConditions] === ele)
-    )
+        data.some((ele) => item[filterConditions] === ele)
+      )
     : originalRows.value;
 };
 
@@ -199,7 +216,7 @@ const showNotif = (type, message) => {
     position: "top",
   });
 };
-onMounted(fetchDataAndSetRows)
+onMounted(fetchDataAndSetRows);
 </script>
 
 <style scoped lang="scss">
