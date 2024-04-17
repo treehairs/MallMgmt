@@ -12,7 +12,7 @@ export default [
     ]
   },
   {
-    icon: 'perm_identity',
+    icon: 'description',
     label: '日志功能',
     default_opened: false,
     item: [
@@ -70,11 +70,45 @@ export default [
       },
       {
         link: 'local_shipping',
-        label: '待签收订单'
+        label: '待签收订单',
+        to: '/unfinished'
       },
       {
         link: 'checklist',
-        label: '已完成订单'
+        label: '已完成订单',
+        to: '/completed'
+      },
+    ]
+  },
+  {
+    icon: 'account_box',
+    label: '个人信息',
+    default_opened: false,
+    item: [
+      {
+        link: 'topic',
+        label: '信息编辑',
+        to: '/order',
+      },
+      {
+        link: 'local_shipping',
+        label: '添加账户'
+      },
+      {
+        link: 'feedback',
+        label: '退出登录'
+      }
+    ]
+  },
+  {
+    icon: 'account_box',
+    label: '客户消息',
+    default_opened: false,
+    item: [
+      {
+        link: 'topic',
+        label: '聊天',
+        to: '/chat',
       }
     ]
   },

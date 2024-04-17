@@ -1,31 +1,33 @@
 <script setup>
 import { api } from "src/boot/axios";
+import { userStore } from "src/stores/user";
 import { showNotif } from "src/utils/utils";
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
+const store = userStore();
 
-const username = ref("")
-const password = ref("")
+const username = ref("");
+const password = ref("");
 
 const login = async () => {
   if (username.value === "" || password.value === "") {
-    showNotif("warning", "账号或密码不能为空！")
-    return
+    showNotif("warning", "账号或密码不能为空！");
+    return;
   }
   const data = {
     username: username.value,
-    password: password.value
-  }
+    password: password.value,
+  };
 
-  const result = await api.post('/login', data)
+  const result = await api.post("/login", data);
   if (result.status === 200) {
-    showNotif("positive", "登录成功")
-    router.push('/')
-  }
-  else if (result.status === 201) {
-    showNotif("warning", "账号或密码错误")
+    showNotif("positive", "登录成功");
+    store.updateUserInfo(result.data.data[0]);
+    router.push("/");
+  } else if (result.status === 201) {
+    showNotif("warning", "账号或密码错误");
   }
 
   // const user = userStore.data.find(user => user.username === username.value)
@@ -35,10 +37,7 @@ const login = async () => {
   //   authStore.login()
   //   router.back(1)
   // }
-
-}
-
-
+};
 </script>
 
 <template>
@@ -46,13 +45,29 @@ const login = async () => {
     <div class="login-box">
       <ul>
         <li class="title">登录</li>
-        <li class="username"><input type="text" placeholder="用户名" id="username" v-model="username"></li>
-        <li class="password"><input type="password" placeholder="密码" id="password" v-model="password"></li>
+        <li class="username">
+          <input
+            type="text"
+            placeholder="用户名"
+            id="username"
+            v-model="username"
+          />
+        </li>
+        <li class="password">
+          <input
+            type="password"
+            placeholder="密码"
+            id="password"
+            v-model="password"
+          />
+        </li>
         <!-- <li class="op">
           <div class="left"><input type="checkbox">记住我</div>
           <div class="right">忘记密码？</div>
         </li> -->
-        <li class="submit"><input type="submit" value="登录" id="login" @click="login"></li>
+        <li class="submit">
+          <input type="submit" value="登录" id="login" @click="login" />
+        </li>
         <!-- <li class="toReg">还没账号？<router-link to="/register">去注册</router-link></li> -->
       </ul>
     </div>
@@ -120,7 +135,6 @@ const login = async () => {
 }
 
 .login-box .submit input {
-
   width: 320px;
   height: 40px;
   border-radius: 10px;
@@ -130,7 +144,7 @@ const login = async () => {
   font-size: 18px;
   letter-spacing: 5px;
   cursor: pointer;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .login-box .submit input:hover {

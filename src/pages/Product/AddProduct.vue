@@ -201,6 +201,11 @@ const statusColor = ref(
 // 获取子组件传递的statu值
 const selectedData = (data) => {
   formData.value.product_status = data[0];
+  console.log(
+    product_status_list.find(
+      (item) => item.status === formData.value.product_status
+    )
+  );
   statusColor.value = product_status_list.find(
     (item) => item.status === formData.value.product_status
   ).color;

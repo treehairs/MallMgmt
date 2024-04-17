@@ -57,6 +57,7 @@ const fetchDataAndSetRows = async () => {
       // item.payment_time = moment(item.payment_time).format("YYYY-MM-DD HH:mm:ss");
       // item.modify_time = moment(item.modify_time).format("YYYY-MM-DD HH:mm:ss");
     });
+    data.data = data.data.filter((item) => item.order_status === "已完成");
     originalRows.value = data.data;
     rows.value = [...originalRows.value];
   } catch (error) {
@@ -105,7 +106,6 @@ const searchEvent = (keyword) => {
 const handleEvent = async (item) => {
   if (await updateData("/orders/" + item.order_id)) {
     showNotif("positive", "更新成功");
-    fetchDataAndSetRows();
   } else {
     showNotif("negative", "更新失败");
   }

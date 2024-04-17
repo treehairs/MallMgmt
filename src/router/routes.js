@@ -55,7 +55,17 @@ const routes = [
             path: '',
             component: () => import('pages/Order/OrderList.vue'),
             meta: { title: '订单列表', icon: 'topic', module: '订单管理', module_icon: 'vertical_split' },
-          }
+          },
+          {
+            path: '/unfinished',
+            component: () => import('pages/Order/UnfinishedOrders.vue'),
+            meta: { title: '待签收订单', icon: 'local_shipping', module: '订单管理', module_icon: 'vertical_split' },
+          },
+          {
+            path: '/completed',
+            component: () => import('pages/Order/CompletedOrders.vue'),
+            meta: { title: '已完成订单', icon: 'checklist', module: '订单管理', module_icon: 'vertical_split' },
+          },
         ]
       },
       {
@@ -65,7 +75,18 @@ const routes = [
           {
             path: '',
             component: () => import('pages/Log/LogList.vue'),
-            meta: { title: '日志列表', icon: 'description', module: '日志管理', module_icon: 'perm_identity' },
+            meta: { title: '日志列表', icon: 'assignment', module: '日志管理', module_icon: 'description' },
+          }
+        ]
+      },
+      {
+        path: 'chat',
+        component: () => import('pages/ChatPage.vue'),
+        children: [
+          {
+            path: '',
+            component: () => import('pages/Chat/Chat.vue'),
+            meta: { title: '用户聊天', icon: 'assignment', module: '日志管理', module_icon: 'description' },
           }
         ]
       },

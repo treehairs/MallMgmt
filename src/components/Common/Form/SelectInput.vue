@@ -53,7 +53,7 @@ const props = defineProps([
   "hide_close_icon",
 ]);
 const emit = defineEmits(["selectedChanged", "selectedData"]);
-let data = props.data;
+let data = ref(props.data);
 const single_choice = props.single_choice || false;
 const default_value = props.default_value || "请选择";
 const hide_close_icon = props.hide_close_icon || false;
@@ -61,7 +61,9 @@ const filterConditions = ref(props.filterConditions);
 const hide = filterConditions.value + "-hide";
 const dataCopy = ref([...props.data]);
 // 获取被选中的列名
-const selectedData = computed(() => data.filter((item) => item[hide] === true));
+const selectedData = computed(() =>
+  data.value.filter((item) => item[hide] === true)
+);
 
 // 选中的数据
 const filterData = computed(() =>
@@ -83,7 +85,7 @@ function removeDuplicates(arr, uniId) {
 // 监听列名选项点击事件
 const handleItemClick = (item) => {
   // 单选
-  if (single_choice) data.map((item) => (item[hide] = false));
+  if (single_choice) data.value.map((item) => (item[hide] = false));
   // 多选
   item[hide] = item[hide] === undefined ? true : !item[hide];
 
@@ -102,7 +104,7 @@ const handleClickOutside = (e) => {
 };
 
 // 对data数据中相同的类别进行去重
-data = removeDuplicates(data, filterConditions.value);
+data.value = removeDuplicates(data.value, filterConditions.value);
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);

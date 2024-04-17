@@ -39,6 +39,7 @@ import { onMounted, ref } from "vue";
 import { deleteData, fetchData, updateData } from "src/services/api";
 import { debounce, throttle, useQuasar } from "quasar";
 import moment from "moment";
+import { userStore } from "src/stores/user";
 
 const rows = ref([]);
 const originalRows = ref([]);
@@ -57,6 +58,7 @@ const fetchDataAndSetRows = async () => {
       // item.payment_time = moment(item.payment_time).format("YYYY-MM-DD HH:mm:ss");
       // item.modify_time = moment(item.modify_time).format("YYYY-MM-DD HH:mm:ss");
     });
+    data.data = data.data.filter((item) => item.order_status !== "已完成");
     originalRows.value = data.data;
     rows.value = [...originalRows.value];
   } catch (error) {
@@ -106,6 +108,14 @@ const handleEvent = async (item) => {
   if (await updateData("/orders/" + item.order_id)) {
     showNotif("positive", "更新成功");
     fetchDataAndSetRows();
+    const store = userStore();
+    await updateData("/logs", {
+      admin_id: store.userInfo.admin_id,
+      module: "订单模块",
+      action_type: "修改",
+      detail: "完成订单",
+      request_method: "POST",
+    });
   } else {
     showNotif("negative", "更新失败");
   }
