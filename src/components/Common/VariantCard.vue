@@ -7,7 +7,10 @@
       <div class="btn update-btn" @click.prevent="UpdateVariantCard = true">
         <q-icon name="edit" />
       </div>
-      <div class="btn delete-btn" @click.prevent="deleteVariant(variant.variant_id)">
+      <div
+        class="btn delete-btn"
+        @click.prevent="deleteVariant(variant.variant_id)"
+      >
         <q-icon name="close" />
       </div>
     </li>
@@ -24,7 +27,11 @@
     </li>
     <li class="product-style">{{ variant.style }}+{{ variant.specs }}</li>
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant @submitEvent="updateVariant" @cancel="UpdateVariantCard = false" :updateVariantInfo="variant" />
+      <UpdateVariant
+        @submitEvent="updateVariant"
+        @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="variant"
+      />
     </q-dialog>
   </ul>
 </template>
@@ -34,7 +41,7 @@ import { url } from "boot/axios";
 import { ref } from "vue";
 import UpdateVariant from "src/components/Common/UpdateVariant.vue";
 import { updateData } from "src/services/api";
-import { showNotif } from "src/utils/utils.js";
+import { logger, showNotif } from "src/utils/utils.js";
 
 const props = defineProps(["variant"]);
 const emit = defineEmits(["deleteVariant"]);
@@ -49,8 +56,10 @@ const deleteVariant = (variant_id) => {
 const updateVariant = (variant) => {
   console.log(variant);
   variant.checked = true;
-  if (updateData(`/variants/${variant.variant_id}`, variant))
+  if (updateData(`/variants/${variant.variant_id}`, variant)) {
     showNotif("positive", "修改成功");
+    logger("商品", "修改", "更新变体", "POST");
+  }
   UpdateVariantCard.value = false;
 };
 </script>
@@ -118,7 +127,6 @@ const updateVariant = (variant) => {
 }
 
 .checked {
-
   &::before,
   &::after {
     width: 100%;
@@ -160,7 +168,6 @@ const updateVariant = (variant) => {
   }
 
   @mixin set-btn-color($color) {
-
     // background: $bg;
     &:hover {
       background: darken($color, $amount: 10%);
@@ -253,7 +260,6 @@ const updateVariant = (variant) => {
   }
 
   .checked {
-
     &::before,
     &::after {
       border-color: var(--primary);

@@ -2,33 +2,65 @@
   <div class="variants-box">
     <div class="header">
       <span class="header-title">商品变体列表</span>
-      <q-btn size="15px" :class="allSelectedStatus ? 'text-white' : 'text-black'" unelevated @click="allSelected"
-        :color="allSelectedStatus ? 'primary' : 'grey-1'">全选</q-btn>
-      <q-btn color="accent" icon="loyalty" size="13px" class="btn set-discount-btn" :disable="!checkedVariant">
+      <q-btn
+        size="15px"
+        :class="allSelectedStatus ? 'text-white' : 'text-black'"
+        unelevated
+        @click="allSelected"
+        :color="allSelectedStatus ? 'primary' : 'grey-1'"
+        >全选</q-btn
+      >
+      <q-btn
+        color="accent"
+        icon="loyalty"
+        size="13px"
+        class="btn set-discount-btn"
+        :disable="!checkedVariant"
+      >
         <q-tooltip>批量设置折扣</q-tooltip>
       </q-btn>
-      <q-btn color="negative" icon="delete_sweep" size="15px" class="btn delete-btn" :disable="!checkedVariant" @click="
-        deleteEventConfirm = true;
-      deleteVariantID = 0;
-      ">
+      <q-btn
+        color="negative"
+        icon="delete_sweep"
+        size="15px"
+        class="btn delete-btn"
+        :disable="!checkedVariant"
+        @click="
+          deleteEventConfirm = true;
+          deleteVariantID = 0;
+        "
+      >
         <q-tooltip>批量删除</q-tooltip>
       </q-btn>
-      <q-btn color="primary" icon="add" size="15px" class="btn add-variant-btn" @click="updateVariant(0)">
+      <q-btn
+        color="primary"
+        icon="add"
+        size="15px"
+        class="btn add-variant-btn"
+        @click="updateVariant(0)"
+      >
         <q-tooltip>添加商品变体</q-tooltip>
       </q-btn>
     </div>
     <div class="variants">
       <transition-group name="slide">
         <template v-for="variant in variants" :key="variant">
-          <VariantCard :variant="variant" @deleteVariant="deleteVariant" @updateVariant="updateVariant"
-            @click="handleClickVariant(variant)" />
+          <VariantCard
+            :variant="variant"
+            @deleteVariant="deleteVariant"
+            @updateVariant="updateVariant"
+            @click="handleClickVariant(variant)"
+          />
         </template>
       </transition-group>
     </div>
 
     <q-dialog v-model="UpdateVariantCard">
-      <UpdateVariant @addVariant="addVariant" @cancel="UpdateVariantCard = false"
-        :updateVariantInfo="updateVariantInfo" />
+      <UpdateVariant
+        @addVariant="addVariant"
+        @cancel="UpdateVariantCard = false"
+        :updateVariantInfo="updateVariantInfo"
+      />
     </q-dialog>
   </div>
 </template>
@@ -36,6 +68,7 @@
 <script setup>
 import VariantCard from "src/components/Common/VariantCard.vue";
 import { deleteData, fetchData } from "src/services/api";
+import { logger } from "src/utils/utils";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -98,6 +131,7 @@ const deleteDataEvent = async (data) => {
   if (result) {
     fetchDataAndSetRows();
     showNotif("positive", "成功删除");
+    logger("商品模块", "删除", "删除变体", "DELETE");
   } else {
     showNotif("warning", "删除失败");
   }

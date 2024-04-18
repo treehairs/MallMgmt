@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
-import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
+import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory, useRouter } from 'vue-router'
 import routes from './routes'
+import { showNotif } from 'src/utils/utils'
 
 /*
  * If not building with SSR mode, you can
@@ -24,6 +25,16 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
+  })
+
+  Router.beforeEach((to, from, next) => {
+    if (JSON.parse(localStorage.getItem('userInfo')) === null && to.path !== "/login") {
+      showNotif("info", "请登录!")
+      const router = useRouter()
+      router.push('/login')
+    } else {
+      next()
+    }
   })
 
   return Router

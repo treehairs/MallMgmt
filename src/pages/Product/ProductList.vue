@@ -133,6 +133,7 @@ import { product_status_list } from "src/data/statusColor";
 import { debounce, throttle, useQuasar } from "quasar";
 import { url } from "boot/axios";
 import { useRouter } from "vue-router";
+import { logger } from "src/utils/utils";
 
 const $q = useQuasar();
 const router = useRouter();
@@ -206,6 +207,7 @@ const deleteDataEvent = async (data) => {
   if (result) {
     fetchDataAndSetRows();
     showNotif("positive", "成功删除");
+    logger("商品模块", "删除", "删除商品", "DELETE");
   } else {
     showNotif("warning", "删除失败");
   }

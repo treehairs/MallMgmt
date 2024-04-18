@@ -39,6 +39,7 @@ import { onMounted, ref } from "vue";
 import { deleteData, fetchData, updateData } from "src/services/api";
 import { debounce, throttle, useQuasar } from "quasar";
 import moment from "moment";
+import { logger } from "src/utils/utils";
 
 const rows = ref([]);
 const originalRows = ref([]);
@@ -105,6 +106,7 @@ const searchEvent = (keyword) => {
 const handleEvent = async (item) => {
   if (await updateData("/orders/" + item.order_id)) {
     showNotif("positive", "更新成功");
+    logger("订单模块", "修改", "完成订单", "POST");
     fetchDataAndSetRows();
   } else {
     showNotif("negative", "更新失败");

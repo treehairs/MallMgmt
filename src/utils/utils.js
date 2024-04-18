@@ -91,9 +91,33 @@ export function size2Str(size) {
  */
 import { customAlphabet } from "nanoid";
 import moment from "moment";
+import { updateData } from 'src/services/api'
 
 export const generate_pid = () => {
   const alphabet = "0123456789";
   const nanoid = customAlphabet(alphabet, 9);
   return nanoid();
 };
+
+
+/**
+ * 记录日志
+ * @param {string} module 操作模块
+ * @param {Action} action_type 操作类型
+ * @param {string} detail 操作详情
+ * @param {Method} request_method 请求方法
+ * @typedef {'POST' | 'DELETE' } Method
+ * @typedef {'修改' | '添加' | '删除' } Action
+ * @returns {Number} 请求结果
+ */
+export const logger = (module, action_type, detail, request_method) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  return updateData("/logs", {
+    admin_id: userInfo.admin_id,
+    module,
+    action_type,
+    detail,
+    request_method,
+  });
+}
+

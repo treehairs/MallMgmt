@@ -104,11 +104,7 @@ const searchEvent = (keyword) => {
 };
 
 const handleEvent = async (item) => {
-  if (await updateData("/orders/" + item.order_id)) {
-    showNotif("positive", "更新成功");
-  } else {
-    showNotif("negative", "更新失败");
-  }
+  showNotif("positive", "订单已完成");
 };
 
 /**

@@ -64,10 +64,10 @@ export default [
         label: '总订单',
         to: '/order',
       },
-      {
-        link: 'feedback',
-        label: '售后订单'
-      },
+      // {
+      //   link: 'feedback',
+      //   label: '售后订单'
+      // },
       {
         link: 'local_shipping',
         label: '待签收订单',
@@ -80,38 +80,38 @@ export default [
       },
     ]
   },
-  {
-    icon: 'account_box',
-    label: '个人信息',
-    default_opened: false,
-    item: [
-      {
-        link: 'topic',
-        label: '信息编辑',
-        to: '/order',
-      },
-      {
-        link: 'local_shipping',
-        label: '添加账户'
-      },
-      {
-        link: 'feedback',
-        label: '退出登录'
-      }
-    ]
-  },
-  {
-    icon: 'account_box',
-    label: '客户消息',
-    default_opened: false,
-    item: [
-      {
-        link: 'topic',
-        label: '聊天',
-        to: '/chat',
-      }
-    ]
-  },
+  // {
+  //   icon: 'account_box',
+  //   label: '个人信息',
+  //   default_opened: false,
+  //   item: [
+  //     {
+  //       link: 'topic',
+  //       label: '信息编辑',
+  //       to: '/order',
+  //     },
+  //     {
+  //       link: 'local_shipping',
+  //       label: '添加账户'
+  //     },
+  //     {
+  //       link: 'feedback',
+  //       label: '退出登录'
+  //     }
+  //   ]
+  // },
+  // {
+  //   icon: 'account_box',
+  //   label: '客户消息',
+  //   default_opened: false,
+  //   item: [
+  //     {
+  //       link: 'topic',
+  //       label: '聊天',
+  //       to: '/chat',
+  //     }
+  //   ]
+  // },
   // {
   //   icon: 'vertical_split',
   //   label: '促销活动',

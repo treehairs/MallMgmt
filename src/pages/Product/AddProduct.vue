@@ -137,7 +137,7 @@
 import Stepper from "src/components/Common/Stepper.vue";
 import UploadImage from "src/components/Common/UploadImage.vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
-import { isAnyObjectValueEmpty, showNotif } from "src/utils/utils.js";
+import { isAnyObjectValueEmpty, logger, showNotif } from "src/utils/utils.js";
 import { deleteData, fetchData, updateData } from "src/services/api";
 import { product_status_list } from "src/data/statusColor";
 import { ref, computed } from "vue";
@@ -233,6 +233,7 @@ const handleUploadImage = (data) => {
 const handleSubmitEvent = () => {
   if (updateData("/products", formData.value)) {
     showNotif("positive", "添加成功");
+    logger("商品模块", "添加", "添加商品", "POST");
     router.push("/product");
   } else {
     showNotif("warning", "添加失败");

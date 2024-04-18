@@ -214,7 +214,7 @@ import UploadImage from "src/components/Common/UploadImage.vue";
 import EmptyBox from "src/components/Common/EmptyBox.vue";
 import SelectInput from "src/components/Common/Form/SelectInput.vue";
 import PromptBox from "src/components/Common/Form/PromptBox.vue";
-import { isAnyObjectValueEmpty, showNotif } from "src/utils/utils.js";
+import { isAnyObjectValueEmpty, logger, showNotif } from "src/utils/utils.js";
 import { deleteData, fetchData, updateData } from "src/services/api";
 import { product_status_list } from "src/data/statusColor";
 import { ref, computed, reactive, watch, onMounted, inject } from "vue";
@@ -367,6 +367,7 @@ const deleteDataEvent = async (data) => {
   if (result) {
     fetchDataAndSetRows();
     showNotif("positive", "成功删除");
+    logger("商品模块", "删除", "删除商品", "DELETE");
   } else {
     showNotif("warning", "删除失败");
   }
@@ -379,6 +380,7 @@ const addVariant = (variant) => {
   updateData("/variants", variant)
     .then((res) => {
       showNotif("positive", "成功添加", "check");
+      logger("商品模块", "添加", "删除变体", "POST");
       fetchDataAndSetRows();
     })
     .catch((err) => {
@@ -410,6 +412,7 @@ const handleUploadImage = (data) => {
 const handleSubmitEvent = () => {
   if (updateData("/products/" + formData.value.product_id, formData.value)) {
     showNotif("positive", "修改成功");
+    logger("商品模块", "修改", "修改商品", "POST");
     router.push("/product");
   } else {
     showNotif("warning", "修改失败");

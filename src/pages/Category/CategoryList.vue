@@ -6,14 +6,26 @@
         <span v-if="refreshed">更新</span>
         <q-icon v-else name="refresh" class="header-icon refreshing"></q-icon>
       </q-btn>
-      <q-btn class="header-btn delete-btn" color="negative" unelevated :disable="deleteDisabled" @click="deleteItems">
+      <q-btn
+        class="header-btn delete-btn"
+        color="negative"
+        unelevated
+        :disable="deleteDisabled"
+        @click="deleteItems"
+      >
         <q-icon name="delete_sweep" class="header-icon"></q-icon>
         删除
       </q-btn>
     </div>
 
-    <Table :rows="rows" :columnName="columnName" :closePromptBox="closePromptBox" v-if="productsReady"
-      @checkboxChangeInTable="checkboxChange" @closePromptBox="closePromptBox = false">
+    <Table
+      :rows="rows"
+      :columnName="columnName"
+      :closePromptBox="closePromptBox"
+      v-if="productsReady"
+      @checkboxChangeInTable="checkboxChange"
+      @closePromptBox="closePromptBox = false"
+    >
       <template v-slot:category_id="{ props }">
         <div class="category_id">
           <span>{{ props.item.category_id }}</span>
@@ -30,13 +42,21 @@
         </div>
       </template>
       <template v-slot:op="{ props }">
-        <q-item clickable v-close-popup @click="handleEdit(props.item.category_id)">
+        <q-item
+          clickable
+          v-close-popup
+          @click="handleEdit(props.item.category_id)"
+        >
           <q-item-section class="section">
             <q-item-label>修改</q-item-label>
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-close-popup @click="deleteItem(props.item.category_id)">
+        <q-item
+          clickable
+          v-close-popup
+          @click="deleteItem(props.item.category_id)"
+        >
           <q-item-section class="section">
             <q-item-label>删除</q-item-label>
           </q-item-section>
@@ -45,12 +65,17 @@
     </Table>
 
     <div v-else class="relative-position loading">
-      <q-inner-loading showing><q-spinner-facebook color="primary" size="30px" /></q-inner-loading>
+      <q-inner-loading showing
+        ><q-spinner-facebook color="primary" size="30px"
+      /></q-inner-loading>
     </div>
 
     <!-- 数据删除提示框 -->
     <q-dialog v-model="deleteEventConfirm">
-      <PromptBox @deleteEvent="deleteEvent" @cancel="deleteEventConfirm = false"></PromptBox>
+      <PromptBox
+        @deleteEvent="deleteEvent"
+        @cancel="deleteEventConfirm = false"
+      ></PromptBox>
     </q-dialog>
   </div>
 </template>
@@ -64,6 +89,7 @@ import { deleteData } from "src/services/api";
 // import { showNotif } from 'src/utils/utils.js'
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { debounce, throttle, useQuasar } from "quasar";
+import { logger } from "src/utils/utils";
 
 const $q = useQuasar();
 const rows = ref([]);
@@ -121,6 +147,7 @@ const deleteDataEvent = async (data) => {
   if (result) {
     fetchDataAndSetRows();
     showNotif("positive", "成功删除");
+    logger("分类模块", "删除", "删除分类", "DELETE");
   } else {
     showNotif("warning", "删除失败");
   }

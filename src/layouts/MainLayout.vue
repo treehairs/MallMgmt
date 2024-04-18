@@ -63,7 +63,7 @@
                 ></q-toggle>
               </div>
             </div>
-            <div class="log-out">
+            <div class="log-out" @click="logOut">
               <span>退出登录</span>
               <div class="log-out-icon">
                 <q-icon name="logout"></q-icon>
@@ -90,6 +90,7 @@ import { reactive, ref } from "vue";
 import { useQuasar } from "quasar";
 import moduleData from "../data/moduleData.js";
 import Breadcrumbs from "src/components/Common/Breadcrumbs.vue";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -97,12 +98,19 @@ export default {
   },
   setup() {
     const $q = useQuasar();
+    const router = useRouter();
+
+    const logOut = () => {
+      localStorage.setItem("userInfo", null);
+      router.push("/login");
+    };
 
     return {
       expansion_item: reactive(moduleData),
       link: ref("financial"),
       visible: ref(false),
       drawer: ref(false),
+      logOut,
     };
   },
 };

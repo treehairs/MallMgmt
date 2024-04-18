@@ -10,4 +10,6 @@ export const userStore = defineStore('user', {
       this.userInfo = newUserInfo;
     }
   },
+  persist: true
+
 })

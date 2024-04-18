@@ -37,6 +37,7 @@ import InputField from "src/components/Common/InputField.vue";
 import { orderTableFields } from "src/data/columnName";
 import { onMounted, ref } from "vue";
 import { deleteData, fetchData, updateData } from "src/services/api";
+import { logger } from "src/utils/utils";
 import { debounce, throttle, useQuasar } from "quasar";
 import moment from "moment";
 import { userStore } from "src/stores/user";
@@ -107,15 +108,8 @@ const searchEvent = (keyword) => {
 const handleEvent = async (item) => {
   if (await updateData("/orders/" + item.order_id)) {
     showNotif("positive", "更新成功");
+    logger("订单模块", "修改", "完成订单", "POST");
     fetchDataAndSetRows();
-    const store = userStore();
-    await updateData("/logs", {
-      admin_id: store.userInfo.admin_id,
-      module: "订单模块",
-      action_type: "修改",
-      detail: "完成订单",
-      request_method: "POST",
-    });
   } else {
     showNotif("negative", "更新失败");
   }
