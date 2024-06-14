@@ -100,18 +100,18 @@ export default [
   //     }
   //   ]
   // },
-  // {
-  //   icon: 'account_box',
-  //   label: '客户消息',
-  //   default_opened: false,
-  //   item: [
-  //     {
-  //       link: 'topic',
-  //       label: '聊天',
-  //       to: '/chat',
-  //     }
-  //   ]
-  // },
+  {
+    icon: 'account_box',
+    label: '客户消息',
+    default_opened: false,
+    item: [
+      {
+        link: 'topic',
+        label: '聊天',
+        to: '/chat',
+      }
+    ]
+  },
   // {
   //   icon: 'vertical_split',
   //   label: '促销活动',

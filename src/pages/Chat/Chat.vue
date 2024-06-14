@@ -16,8 +16,33 @@
         </template>
       </div>
     </div>
-    <div class="chat-box">
-      <div class="message-box">
+    <div class="chat-box" v-if="select_user">
+      <header class="chat-box__header">
+        <q-icon name="wifi_calling_3" class="chat-box__header-icon" />
+        <p class="chat-box__header-text">联系用户：{{ select_user }}</p>
+      </header>
+      <div class="chat-box__message--list">
+        <template v-for="message in messageList" :key="message.id">
+          <ChatMessage
+            :sendTime="message.send_time"
+            :message="message.message"
+            :self="state.username === message.from_user"
+          />
+        </template>
+        <!-- <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage /> -->
+      </div>
+
+      <div class="chat-box__message--input">
         <input
           type="text"
           v-model="message_text"
@@ -28,14 +53,25 @@
         <q-icon name="send" class="send-btn" @click="send" />
       </div>
     </div>
+    <div class="chat-box chat-box--empty" v-else>
+      <img
+        src="/icons/no-news.png"
+        alt="暂无消息"
+        class="chat-box--empty__image"
+      />
+      <p class="chat-box--empty__title">请选择用户</p>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { io } from "socket.io-client";
 import UserItem from "src/components/List/UserItem.vue";
-import { onMounted, reactive, ref } from "vue";
+import ChatMessage from "src/components/ChatMessage.vue";
+import { onMounted, reactive, ref, computed } from "vue";
 import { useRoute } from "vue-router";
+import moment, { now } from "moment";
+import { showNotif } from "src/utils/utils";
 
 const route = useRoute();
 const message_text = ref();
@@ -43,11 +79,28 @@ const select_user = ref();
 const state = reactive({
   username: route.query.username,
   userList: [],
+  messageList: [],
 });
 
-const getData = () => {};
+// 过滤消息
+const messageList = computed(() =>
+  state.messageList.filter(
+    (message) =>
+      (message.from_user === state.username &&
+        message.to_user === select_user.value) ||
+      (message.from_user === select_user.value &&
+        message.to_user === state.username)
+  )
+);
 
-const socket = io("http://localhost:4000", {
+const selectUser = (user) => {
+  console.log(user);
+  select_user.value = user.username;
+
+  console.log(messageList.value);
+};
+
+const socket = io("ws://localhost:4000", {
   query: {
     username: state.username,
   },
@@ -61,21 +114,33 @@ socket.on("onLine", (data) => {
 socket.on("leaving", (data) => {});
 
 const send = () => {
-  socket.emit("send", {
-    fromUsername: state.username,
-    targetUsername: select_user.value,
-    msg: message_text.value,
-  });
+  if (!message_text.value) {
+    showNotif("negative", "请输入信息");
+    return;
+  }
+  const message_recording = {
+    from_user: state.username,
+    to_user: select_user.value,
+    message: message_text.value,
+    send_time: new Date(),
+  };
+  socket.emit("send", message_recording);
+  state.messageList.push(message_recording);
+
+  message_text.value = null;
 };
 
-socket.on("receive", (data) => {
-  console.log(data);
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    // 在这里添加回车键按下后要执行的操作
+    send();
+  }
 });
 
-const selectUser = (user) => {
-  console.log(user);
-  select_user.value = user.username;
-};
+socket.on("receive", (data) => {
+  state.messageList.push(data);
+  console.log(state.messageList);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -104,6 +169,23 @@ const selectUser = (user) => {
     border-radius: 10px;
     background: #fff;
     display: flex;
+    flex-direction: column;
+
+    &--empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &__image {
+        width: 400px;
+      }
+
+      &__title {
+        color: #9e9e9e;
+        letter-spacing: 2px;
+        font-family: yuanti;
+      }
+    }
   }
 }
 
@@ -121,7 +203,7 @@ const selectUser = (user) => {
   }
 }
 
-.message-box {
+.chat-box__message--input {
   width: 60%;
   height: 45px;
   border: 1px solid #ddd;
@@ -168,6 +250,35 @@ const selectUser = (user) => {
     }
   }
 }
+
+.chat-box__message--list {
+  width: 100%;
+  max-height: 600px;
+  padding: 20px 80px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chat-box__header {
+  font-family: yuanti;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+
+  &-icon {
+    margin-right: 8px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
 .user-list {
   padding: 0 10px;
 }
